@@ -22,7 +22,6 @@ abstract class BaseActivity<T : BPresenter> : BActivity<T>() {
      * 页面传值
      */
     override fun initArgs(intent: Intent?) {
-
     }
 
     /**

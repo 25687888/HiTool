@@ -38,13 +38,6 @@ allprojects {
         maven { url "https://jitpack.io" }
         maven { url 'https://maven.fabric.io/public' }
         maven { url 'https://dl.bintray.com/jetbrains/anko' } //这是你需要加入的
-        maven {
-            credentials {
-                username 'admin'
-                password 'admin123'
-            }
-            url "http://192.168.66.174:8081/nexus/content/groups/public/"
-        }
     }
 }
 

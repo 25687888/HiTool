@@ -65,5 +65,5 @@ dependencies {
     implementation project(path: ':hitool')
     kapt 'org.greenrobot:eventbus-annotation-processor:3.0.1'//Kotlin eventbus注解处理器
 
-//    implementation 'com.github.25687888:HiTool:1.0.0'
+//    implementation 'com.github.25687888:HiTool:1.0.2'
 }

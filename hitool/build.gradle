@@ -131,7 +131,7 @@ dependencies {
     //手势密码
     api 'com.github.ihsg:PatternLocker:2.5.4'
 
-    compileOnly 'com.blankj:utilcode:1.25.9'//柯基 AndroidUtilCode
+    implementation 'com.blankj:utilcode:1.25.9'//柯基 AndroidUtilCode
 }
 
 // ---------------------- JitPack ----------------------

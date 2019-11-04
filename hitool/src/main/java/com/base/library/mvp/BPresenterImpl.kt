@@ -1,6 +1,7 @@
 package com.base.library.mvp
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.base.library.http.HttpDto
@@ -8,6 +9,12 @@ import com.base.library.view.AlertDialog
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.exception.HttpException
 import com.lzy.okgo.exception.StorageException
+import com.uber.autodispose.AutoDispose
+import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
+import talex.zsw.basecore.util.JsonTool
 import talex.zsw.basecore.util.LogTool
 import java.net.ConnectException
 import java.net.SocketTimeoutException
@@ -77,7 +84,7 @@ open class BPresenterImpl<T : BView>(var mView: T) : BPresenter, BRequestCallbac
          */
         if (!baseHttpDto.silence) {
             val fl = if (baseHttpDto.isFinish) mView?.getConfirmFinishListener() else null
-            mView?.showDialog(AlertDialog.ERROR_TYPE,"异常提示", content, confirmListener = fl)
+            mView?.showDialog(AlertDialog.ERROR_TYPE, "异常提示", content, confirmListener = fl)
         }
 
         throwable?.printStackTrace()
@@ -85,5 +92,22 @@ open class BPresenterImpl<T : BView>(var mView: T) : BPresenter, BRequestCallbac
 
     override fun other(content: String, behavior: String, level: String) {
         mView?.other(content, behavior, level)
+    }
+
+    /**
+     * 异步JsonTool解析,目前只支持对象解析..后续扩展
+     */
+    inline fun <reified T : Any> asyncJsonTool(
+        body: String,
+        crossinline successBlock: (T) -> Unit,
+        crossinline errorBlock: (Throwable) -> Unit? = { t: Throwable -> t.printStackTrace() }
+    ) {
+        Observable
+            .just(body)
+            .subscribeOn(Schedulers.io())
+            .map { JsonTool.getObject(it, T::class.java) }
+            .observeOn(AndroidSchedulers.mainThread())
+            .`as`(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(lifecycleOwner)))
+            .subscribe({ successBlock(it) }, { errorBlock(it) })
     }
 }

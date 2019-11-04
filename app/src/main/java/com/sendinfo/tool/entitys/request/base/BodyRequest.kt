@@ -1,6 +1,6 @@
 package com.sendinfo.tool.entitys.request.base
 
-import com.sendinfo.wuzhizhou.utils.getShebeiCode
+import com.sendinfo.tool.tools.getShebeiCode
 import talex.zsw.basecore.util.AppTool
 import talex.zsw.basecore.util.EncryptTool
 import talex.zsw.basecore.util.TimeTool

@@ -1,8 +1,6 @@
 package com.sendinfo.tool.template.ui
 
 import com.base.library.http.HttpDto
-import com.base.library.mvp.BPresenter
-import com.base.library.mvp.BasePresenter
 import com.sendinfo.tool.template.contract.DemoContract
 import com.sendinfo.tool.template.presenter.DemoPresenter
 import com.base.library.view.AlertDialog
@@ -11,8 +9,7 @@ import com.sendinfo.tool.base.BActivity
 import com.sendinfo.tool.entitys.event.EventBean
 import com.sendinfo.tool.entitys.request.base.BodyRequest
 import com.sendinfo.tool.entitys.request.base.FormRequest
-import com.sendinfo.wuzhizhou.utils.GetTicket
-import org.greenrobot.eventbus.EventBus
+import com.sendinfo.tool.tools.GetTicket
 import org.greenrobot.eventbus.Subscribe
 import talex.zsw.basecore.util.JsonTool
 import talex.zsw.basecore.view.other.RxToast

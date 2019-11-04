@@ -1,13 +1,9 @@
 package com.base.library.util
 
-import android.app.Activity
-import android.content.Context
-import android.content.Intent
 import android.content.res.Resources
 import android.os.Handler
 import android.os.Looper
 import android.util.TypedValue
-import androidx.fragment.app.Fragment
 import com.base.library.database.DataBaseUtils
 import com.base.library.database.entity.JournalRecord
 import io.reactivex.ObservableTransformer
@@ -18,20 +14,6 @@ import io.reactivex.schedulers.Schedulers
 /**
  *  @desc:   工具类
  */
-inline fun <reified T : Activity> Context.startActivity(isFinish: Boolean = true, vararg params: Pair<String, Any?>) {
-    val intent = Intent(this, T::class.java)
-    if (params.isNotEmpty()) IntentUtils.fillIntentArguments(intent, params)
-    this.startActivity(intent)
-    if (isFinish && this is Activity) this.finish()
-}
-
-inline fun <reified T : Activity> Fragment.startActivity(isFinish: Boolean = true, vararg params: Pair<String, Any?>) {
-    val intent = Intent(context, T::class.java)
-    if (params.isNotEmpty()) IntentUtils.fillIntentArguments(intent, params)
-    activity?.startActivity(intent)
-    if (isFinish && this is Fragment) this.activity?.finish()
-}
-
 inline fun tryCatch(tryBlock: () -> Unit, catchBlock: (Throwable) -> Unit = {}) {
     try {
         tryBlock()

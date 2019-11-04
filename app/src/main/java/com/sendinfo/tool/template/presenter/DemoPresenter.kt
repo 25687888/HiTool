@@ -4,6 +4,7 @@ import android.text.TextUtils
 import com.sendinfo.tool.entitys.response.BaseResponse
 import com.base.library.http.HttpDto
 import com.base.library.mvp.BPresenterImpl
+import com.base.library.util.tryCatch
 import com.sendinfo.tool.template.contract.DemoContract
 import com.uber.autodispose.AutoDispose
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
@@ -14,21 +15,18 @@ import talex.zsw.basecore.util.JsonTool
 
 /**
  * 作用: 使用案例,自己定义Presenter
- * 当前为异步JsonTool解析，requestSuccess中可直接解析
+ * 当前为异步JsonTool解析，requestSuccess中也可同步直接解析
  */
 class DemoPresenter(view: DemoContract.View) : BPresenterImpl<DemoContract.View>(view), DemoContract.Presenter {
 
     override fun requestSuccess(body: String, baseHttpDto: HttpDto) {
         super.requestSuccess(body, baseHttpDto)
-        Observable.just(body)
-            .subscribeOn(Schedulers.io())
-            .map { JsonTool.getObject(it, BaseResponse::class.java) }
-            .observeOn(AndroidSchedulers.mainThread())
-            .`as`(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(lifecycleOwner)))
-            .subscribe({ request(it, baseHttpDto) }, { requestError(it, baseHttpDto) })
+        asyncJsonTool<BaseResponse>(body,
+            { requestSuccess(it, baseHttpDto) },
+            { requestError(it, baseHttpDto) })//调用RxJavaIO异步解析
     }
 
-    fun request(baseResponse: BaseResponse, baseHttpDto: HttpDto) {
+    private fun requestSuccess(baseResponse: BaseResponse, baseHttpDto: HttpDto) {
         when (baseHttpDto.url) {
             "" -> {
             }

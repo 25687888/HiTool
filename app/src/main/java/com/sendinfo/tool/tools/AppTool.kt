@@ -1,4 +1,4 @@
-package com.sendinfo.wuzhizhou.utils
+package com.sendinfo.tool.tools
 
 import android.app.Activity
 import android.content.Context

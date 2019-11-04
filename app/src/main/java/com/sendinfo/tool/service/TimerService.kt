@@ -15,7 +15,10 @@ import com.sendinfo.tool.entitys.request.base.BodyRequest
 import com.sendinfo.tool.entitys.request.base.FormRequest
 import com.sendinfo.tool.entitys.request.UploadLog
 import com.sendinfo.tool.entitys.response.BaseResponse
-import com.sendinfo.wuzhizhou.utils.*
+import com.sendinfo.tool.tools.Beat
+import com.sendinfo.tool.tools.getIp
+import com.sendinfo.tool.tools.getShebeiCode
+import com.sendinfo.tool.tools.logSave
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers

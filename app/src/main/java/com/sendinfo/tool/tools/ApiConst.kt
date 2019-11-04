@@ -1,4 +1,4 @@
-package com.sendinfo.wuzhizhou.utils
+package com.sendinfo.tool.tools
 
 // 获取可售票型接口
 const val GetTicket = "api/v1/TicketTrade/GetTicket"

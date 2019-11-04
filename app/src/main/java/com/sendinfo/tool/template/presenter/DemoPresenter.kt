@@ -1,8 +1,6 @@
 package com.sendinfo.tool.template.presenter
 
 import android.text.TextUtils
-import com.base.library.base.IDCARD
-import com.base.library.base.KEY
 import com.sendinfo.tool.entitys.response.BaseResponse
 import com.base.library.http.HttpDto
 import com.base.library.mvp.BPresenterImpl
@@ -32,15 +30,15 @@ class DemoPresenter(view: DemoContract.View) : BPresenterImpl<DemoContract.View>
 
     fun request(baseResponse: BaseResponse, baseHttpDto: HttpDto) {
         when (baseHttpDto.url) {
-            IDCARD -> {
+            "" -> {
             }
         }
     }
 
     override fun check(idCard: String) {
         if (TextUtils.isEmpty(idCard)) {
-            val bRequest = HttpDto(IDCARD).apply {
-                params = mapOf("key" to KEY, "cardno" to idCard)
+            val bRequest = HttpDto("").apply {
+                params = mapOf("key" to "", "cardno" to idCard)
             }
             getData(bRequest)
         } else {

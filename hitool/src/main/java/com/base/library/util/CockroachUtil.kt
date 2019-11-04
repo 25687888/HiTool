@@ -3,9 +3,9 @@ package com.base.library.util
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import com.blankj.utilcode.util.AppUtils
-import com.blankj.utilcode.util.ThrowableUtils
-import com.blankj.utilcode.util.TimeUtils
+import talex.zsw.basecore.util.AppTool
+import talex.zsw.basecore.util.TimeTool
+import talex.zsw.basecore.util.Tool
 
 /**
  * 异常拦截
@@ -53,7 +53,7 @@ object CockroachUtil {
     }
 
     private fun getInfo(e: Throwable): String {
-        val time = TimeUtils.getNowString()
+        val time = TimeTool.getCurTimeString()
         val sb = StringBuilder()
         val head = "************* Log Head ****************" +
                 "\nTime Of Crash      : " + time +
@@ -61,8 +61,8 @@ object CockroachUtil {
                 "\nDevice Model       : " + Build.MODEL +
                 "\nAndroid Version    : " + Build.VERSION.RELEASE +
                 "\nAndroid SDK        : " + Build.VERSION.SDK_INT +
-                "\nApp VersionName    : " + AppUtils.getAppVersionName() +
-                "\nApp VersionCode    : " + AppUtils.getAppVersionCode() +
+                "\nApp VersionName    : " + AppTool.getAppVersionName(Tool.getContext()) +
+                "\nApp VersionCode    : " + AppTool.getAppVersionCode(Tool.getContext()) +
                 "\n************* Log Head ****************\n\n"
         sb.append(head).append(ThrowableUtils.getFullStackTrace(e))
         return sb.toString()

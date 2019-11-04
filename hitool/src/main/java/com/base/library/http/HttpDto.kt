@@ -92,11 +92,8 @@ class HttpDto(val method: String) {
         const val DELETE = 0x100003
         const val HEAD = 0x100004
         const val OPTIONS = 0x100005
-
         const val getOkGo = 0x100006 // OkGo 请求方式
         const val getOkGoRx = 0x100007 // OkGo Rx 请求方式
-        const val getRetrofit2 = 0x100008 // Retrofit2 请求方式
         const val DefaultIp = "DefaultIp" //默认ip地址KEY
     }
-
 }

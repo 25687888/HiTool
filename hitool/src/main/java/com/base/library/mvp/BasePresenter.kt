@@ -1,7 +1,7 @@
 package com.base.library.mvp
 
 import com.base.library.http.HttpDto
-import com.blankj.utilcode.util.LogUtils
+import talex.zsw.basecore.util.LogTool
 
 /**
  * 作用: 通用的P层实现
@@ -17,8 +17,7 @@ class BasePresenter(view: BaseView) : BPresenterImpl<BaseView>(view), BPresenter
         mView?.disDialog()
 
         var string = "${throwable?.message}"
-        LogUtils.e("错误信息 : \n ${throwable?.message}")
-
+        LogTool.e("错误信息 : \n ${throwable?.message}")
         mView?.bindError(string)
     }
 

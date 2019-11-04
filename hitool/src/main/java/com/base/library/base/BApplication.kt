@@ -5,7 +5,6 @@ import androidx.multidex.MultiDexApplication
 import com.base.library.BuildConfig
 import com.base.library.util.CockroachUtil
 import com.base.library.util.roomInsertJournalRecord
-import com.blankj.utilcode.util.Utils
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.https.HttpsUtils
 import okhttp3.OkHttpClient
@@ -20,8 +19,7 @@ open class BApplication : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
         val startTime = System.currentTimeMillis()//获取开始时间
-        Tool.init(this, true)//basecore库初始化 暂时保留两个库
-        Utils.init(this)//柯基库初始化
+        Tool.init(this, true)//basecore库初始化
         initHttp()
         if (!BuildConfig.DEBUG) initCockroach()
         LogTool.d("BApplication启动耗时(ms): ${System.currentTimeMillis() - startTime}")
@@ -55,7 +53,6 @@ open class BApplication : MultiDexApplication() {
 
         //信任所有证书,不安全有风险
         val sslParams1 = HttpsUtils.getSslSocketFactory()
-
         val builder = OkHttpClient.Builder()
 //        builder.addInterceptor(loggingInterceptor)//打印日志
         builder.sslSocketFactory(sslParams1.sSLSocketFactory, sslParams1.trustManager)

@@ -5,10 +5,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.base.library.http.HttpDto
 import com.base.library.view.AlertDialog
-import com.blankj.utilcode.util.LogUtils
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.exception.HttpException
 import com.lzy.okgo.exception.StorageException
+import talex.zsw.basecore.util.LogTool
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
@@ -39,7 +39,6 @@ open class BPresenterImpl<T : BView>(var mView: T) : BPresenter, BRequestCallbac
             when (http.httpMode) {
                 HttpDto.getOkGo -> model.getData(this, http)
                 HttpDto.getOkGoRx -> model.getOkGoRx(this, http)
-                HttpDto.getRetrofit2 -> model.getRetrofit2(this, http)
             }
         }
     }
@@ -71,7 +70,7 @@ open class BPresenterImpl<T : BView>(var mView: T) : BPresenter, BRequestCallbac
         } else if (throwable is IllegalStateException) {
             content = throwable.message ?: "额...出错了"
         }
-        LogUtils.e(content)
+        LogTool.e(content)
 
         /**
          * 不属于静默加载才弹窗

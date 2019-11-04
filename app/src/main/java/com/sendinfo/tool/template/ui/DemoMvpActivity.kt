@@ -1,11 +1,13 @@
 package com.sendinfo.tool.template.ui
 
 import com.base.library.http.HttpDto
+import com.base.library.mvp.BPresenter
+import com.base.library.mvp.BasePresenter
 import com.sendinfo.tool.template.contract.DemoContract
 import com.sendinfo.tool.template.presenter.DemoPresenter
 import com.base.library.view.AlertDialog
 import com.sendinfo.tool.R
-import com.sendinfo.tool.base.BaseActivity
+import com.sendinfo.tool.base.BActivity
 import com.sendinfo.tool.entitys.event.EventBean
 import com.sendinfo.tool.entitys.request.base.BodyRequest
 import com.sendinfo.tool.entitys.request.base.FormRequest
@@ -18,16 +20,11 @@ import talex.zsw.basecore.view.other.RxToast
 /**
  * 作用: 使用案例,Activity使用自己定义的Contract和Presenter
  */
-class DemoActivity : BaseActivity<DemoContract.Presenter>(), DemoContract.View {
+class DemoMvpActivity : BActivity<DemoContract.Presenter>(), DemoContract.View {
 
-    override fun initView() {
-        EventBus.getDefault().register(this)
-        mPresenter = DemoPresenter(this)
-    }
+    override fun bindPresenter(): DemoPresenter = DemoPresenter(this)
 
-    override fun setContentView(): Int {
-        return R.layout.activity_test_template
-    }
+    override fun setContentView(): Int = R.layout.activity_test_template
 
     override fun initData() {
         //播放声音示例

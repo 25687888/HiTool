@@ -5,16 +5,13 @@ import androidx.room.RoomDatabase
 import com.base.library.database.dao.JournalRecordDao
 import com.base.library.database.dao.TestDao
 import com.base.library.database.database.DataBase
-import com.blankj.utilcode.util.SDCardUtils
-import com.blankj.utilcode.util.Utils
+import talex.zsw.basecore.util.FileTool
+import talex.zsw.basecore.util.Tool
 
 object DataBaseUtils {
 
-    private val dataBase = Room.databaseBuilder(
-        Utils.getApp(),
-        DataBase::class.java,
-        "${SDCardUtils.getSDCardInfo()[0].path}/sendInfo/logNew.db"
-    )
+    private val dataBase = Room
+        .databaseBuilder(Tool.getContext(), DataBase::class.java, "${FileTool.getRootPath().path}/sendInfo/logNew.db")
         .setJournalMode(RoomDatabase.JournalMode.TRUNCATE) // 日志模式,立即写入数据库
 //        .allowMainThreadQueries() // todo 允许主线程查询,仅用于测试
         .build()

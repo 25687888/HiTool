@@ -38,13 +38,6 @@ interface BView {
     fun getContext(): Context
 
     /**
-     * 添加 获取 缓存
-     */
-    fun putCache(key: String, content: String, time: Int = -1)
-
-    fun getCache(key: String, consumer: Consumer<String>)
-
-    /**
      * 可以用来保存日志
      */
     fun other(content: String, behavior: String, level: String)

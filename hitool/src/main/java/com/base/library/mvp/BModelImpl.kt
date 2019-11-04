@@ -1,16 +1,13 @@
 package com.base.library.mvp
 
-import com.base.library.base.IDCARD
-import com.base.library.http.HttpManager
 import com.base.library.http.HttpDto
-import com.blankj.utilcode.util.LogUtils
 import com.lzy.okgo.model.Response
-import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import talex.zsw.basecore.util.LogTool
 
 class BModelImpl : BModel {
 
@@ -61,40 +58,6 @@ class BModelImpl : BModel {
             })
     }
 
-    override fun getRetrofit2(callback: BRequestCallback, http: HttpDto) {
-        Observable.just(http)
-            .subscribeOn(Schedulers.io())
-            .doOnSubscribe { if (!http.silence) callback.beforeRequest() }
-            .flatMap { getRetrofitApi(it) }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : Observer<String> {
-                override fun onSubscribe(d: Disposable) {
-                    addDispose(d)
-                }
-
-                override fun onNext(body: String) {
-                    printLog(http.url, http.method, body)
-                    callback.requestSuccess(body, http)
-                }
-
-                override fun onError(e: Throwable) {
-                    callback.requestError(e, http)
-                }
-
-                override fun onComplete() {
-                    callback.requestComplete()
-                }
-            })
-    }
-
-    private fun getRetrofitApi(http: HttpDto): Observable<String> {
-        val httpService = HttpManager.mBaseHttpService
-        return when (http.url) {
-            IDCARD -> httpService.apiPay(http.bodyJson)
-            else -> httpService.apiPay(http.bodyJson)
-        }
-    }
-
     override fun addDispose(disposable: Disposable) {
         compositeDisposable ?: let { compositeDisposable = CompositeDisposable() }
         compositeDisposable?.add(disposable)
@@ -105,14 +68,14 @@ class BModelImpl : BModel {
     }
 
     private fun printLog(url: String, method: String, data: String) {
-        LogUtils.i(
+        LogTool.i(
             StringBuilder()
                 .appendln("Response 地址 : $url")
                 .appendln("方法 : $method")
                 .appendln("返回数据如下 : ")
                 .toString()
         )
-        LogUtils.json(data)
+        LogTool.json(data)
     }
 
 }

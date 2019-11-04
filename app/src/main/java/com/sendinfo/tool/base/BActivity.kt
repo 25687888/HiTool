@@ -2,21 +2,23 @@ package com.sendinfo.tool.base
 
 import android.content.Intent
 import android.view.LayoutInflater
-import com.base.library.base.BActivity
+import com.base.library.base.BMvpActivity
 import com.base.library.mvp.BPresenter
+import com.sendinfo.tool.tools.EventBuslUtils
 import com.base.library.util.SoundPoolUtils
-import com.gyf.immersionbar.ImmersionBar
 import com.sendinfo.tool.R
 import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.b_titlebar.*
+import org.greenrobot.eventbus.Subscribe
 
 /**
- * 沉浸式BaseActivity封装
+ * BaseActivity封装
  */
-abstract class BaseActivity<T : BPresenter> : BActivity<T>() {
+abstract class BActivity<T : BPresenter> : BMvpActivity<T>() {
     val soundPoolUtils: SoundPoolUtils by lazy { SoundPoolUtils().apply { lifecycle.addObserver(this) } }
 
     abstract fun setContentView(): Int
+
+    abstract fun bindPresenter(): T
 
     /**
      * 页面传值
@@ -29,16 +31,17 @@ abstract class BaseActivity<T : BPresenter> : BActivity<T>() {
      */
     override fun initContentView() {
         setContentView(R.layout.activity_base)
-        ImmersionBar.with(this).titleBar(bTitlebar).init() // 沉浸式
         val contentView = LayoutInflater.from(this).inflate(setContentView(), fl, false)
         fl.addView(contentView)
+        mPresenter = bindPresenter()
         initView()
+        lifecycle.addObserver(EventBuslUtils())
     }
 
     /**
      * 页面初始化时调用
      */
-    open fun initView(){
+    open fun initView() {
 
     }
 
@@ -47,5 +50,10 @@ abstract class BaseActivity<T : BPresenter> : BActivity<T>() {
      */
     override fun initData() {
 
+    }
+
+    inner class NotingEvent
+    @Subscribe
+    public fun onEvent(event: NotingEvent) {
     }
 }

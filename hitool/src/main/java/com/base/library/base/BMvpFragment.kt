@@ -8,12 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.base.library.mvp.BPresenter
 import com.base.library.mvp.BView
-import com.base.library.util.getCacheObservable
-import com.base.library.util.putCacheObservable
 import com.base.library.util.roomInsertJournalRecord
 import com.base.library.view.AlertDialog
-import com.gyf.immersionbar.ImmersionBar
-import com.gyf.immersionbar.components.ImmersionFragment
 import com.uber.autodispose.AutoDispose
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
 import io.reactivex.functions.Consumer
@@ -21,11 +17,9 @@ import talex.zsw.basecore.util.LogTool
 import talex.zsw.basecore.util.RegTool
 
 /**
- * ImmersionOwner 用来在Fragment中实现沉浸式
+ * MVP Base Fragment封装
  */
-abstract class BFragment<T : BPresenter> : ImmersionFragment(), BView {
-//abstract class BFragment<T : BPresenter> : Fragment(), BView {
-
+abstract class BMvpFragment<T : BPresenter> : Fragment(), BView {
     abstract fun initArgs(bundle: Bundle?)
     abstract fun initView(bundle: Bundle?)
     abstract fun initData()
@@ -42,7 +36,6 @@ abstract class BFragment<T : BPresenter> : ImmersionFragment(), BView {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         this.inflater = inflater
         this.container = container
-
         initArgs(arguments)
         initView(savedInstanceState)
         mPresenter?.let { lifecycle.addObserver(it) }
@@ -52,10 +45,6 @@ abstract class BFragment<T : BPresenter> : ImmersionFragment(), BView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initData()
-    }
-
-    override fun initImmersionBar() {
-        ImmersionBar.with(this).titleBar(mView).init()
     }
 
     fun setContentView(layout: Int) {
@@ -152,20 +141,6 @@ abstract class BFragment<T : BPresenter> : ImmersionFragment(), BView {
     override fun disDialogFinsh() {
         alertDialog?.dismiss()
         activity?.finish()
-    }
-
-    //保存缓存
-    override fun putCache(key: String, content: String, time: Int) {
-        putCacheObservable(key, content, time)
-            .`as`(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(this)))
-            .subscribe { LogTool.d(it) }
-    }
-
-    //获取缓存
-    override fun getCache(key: String, consumer: Consumer<String>) {
-        getCacheObservable(key)
-            .`as`(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(this)))
-            .subscribe(consumer)
     }
 
     override fun other(content: String, behavior: String, level: String) {

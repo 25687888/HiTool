@@ -7,21 +7,17 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.base.library.mvp.BPresenter
 import com.base.library.mvp.BView
-import com.base.library.util.getCacheObservable
-import com.base.library.util.putCacheObservable
 import com.base.library.util.roomInsertJournalRecord
 import com.base.library.view.AlertDialog
-import com.blankj.utilcode.util.LogUtils
 import com.uber.autodispose.AutoDispose
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
-import io.reactivex.functions.Consumer
 import org.greenrobot.eventbus.EventBus
 import talex.zsw.basecore.util.RegTool
 
 /**
  * MVP Base Activity封装
  */
-abstract class BActivity<T : BPresenter> : AppCompatActivity(), BView {
+abstract class BMvpActivity<T : BPresenter> : AppCompatActivity(), BView {
 
     abstract fun initArgs(intent: Intent?)
     abstract fun initContentView()
@@ -131,20 +127,6 @@ abstract class BActivity<T : BPresenter> : AppCompatActivity(), BView {
     override fun disDialogFinsh() {
         alertDialog?.dismiss()
         finish()
-    }
-
-    //保存缓存
-    override fun putCache(key: String, content: String, time: Int) {
-        putCacheObservable(key, content, time)
-            .`as`(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(this)))
-            .subscribe { LogUtils.d(it) }
-    }
-
-    //获取缓存
-    override fun getCache(key: String, consumer: Consumer<String>) {
-        getCacheObservable(key)
-            .`as`(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(this)))
-            .subscribe(consumer)
     }
 
     override fun other(content: String, behavior: String, level: String) {

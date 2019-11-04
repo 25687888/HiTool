@@ -12,8 +12,6 @@ interface BModel {
 
     fun getOkGoRx(callback: BRequestCallback, http: HttpDto)
 
-    fun getRetrofit2(callback: BRequestCallback, http: HttpDto)
-
     fun addDispose(disposable: Disposable)
 
     fun closeAllDispose()

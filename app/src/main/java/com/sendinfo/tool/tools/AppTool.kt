@@ -6,10 +6,10 @@ import android.content.Intent
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
-fun <T> startAct(context: Context, cls: Class<T>, isFinish: Boolean = true) {
-    val intent = Intent(context, cls)
-    context.startActivity(intent)
-    if (isFinish && context is Activity) context.finish()
+inline fun <reified T : Activity> Activity.startAct(isFinish: Boolean = true) {
+    val intent = Intent(this, T::class.java)
+    this.startActivity(intent)
+    if (isFinish) this.finish()
 }
 
 fun startAct(context: Context, intent: Intent, isFinish: Boolean = true) {

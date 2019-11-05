@@ -18,6 +18,18 @@ interface MyLifecycleObserver : LifecycleObserver {
     fun onCreate(@NotNull owner: LifecycleOwner)
 
     /**
+     * Activity 获取焦点
+     */
+    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
+    fun onResume(@NotNull owner: LifecycleOwner)
+
+    /**
+     * Activity 用户不可见状态
+     */
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    fun onStop(@NotNull owner: LifecycleOwner)
+
+    /**
      * Activity 销毁
      */
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)

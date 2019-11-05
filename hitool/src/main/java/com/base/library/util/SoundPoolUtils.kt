@@ -14,15 +14,20 @@ import talex.zsw.basecore.util.Tool
  * 短音频 + 震动
  */
 class SoundPoolUtils : MyLifecycleObserver {
-
     private lateinit var owner: LifecycleOwner
 
     override fun onCreate(owner: LifecycleOwner) {
         this.owner = owner
     }
 
-    override fun onDestroy(owner: LifecycleOwner) {
+    override fun onResume(owner: LifecycleOwner) {
+    }
+
+    override fun onStop(owner: LifecycleOwner) {
         release()
+    }
+
+    override fun onDestroy(owner: LifecycleOwner) {
     }
 
     private val MAX_STREAMS = 2

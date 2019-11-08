@@ -24,6 +24,7 @@ class HttpDto(val method: String) {
     var isMultipart = false//是否强制使用multipart/form-data表单上传
     var fullUrl: String = ""//完整的URL
     var url: String = "${SpTool.getString(DefaultIp)}$method" //方法名(默认设置为URL)
+    var extendField: Any? = null//扩展字段（作用如：同一个接口标记不同方法名）
     var cacheMode = CacheMode.NO_CACHE//缓存模式
     var cacheTime = -1L //缓存时长 -1永不过期
     var heads: Map<String, String>? = null //请求头和参数
@@ -73,6 +74,7 @@ class HttpDto(val method: String) {
         val sb = StringBuilder()
         sb.appendln("请求地址 : $url")
         sb.appendln("请求方法 : $method")
+        sb.appendln("扩展字段 : ${JsonTool.getJsonString(extendField)}")
         sb.appendln("params参数为 : ")
         params?.forEach { sb.appendln("${it.key} = ${it.value}") }
         sb.appendln("请求头为 : ")

@@ -16,8 +16,8 @@ buildscript {
         targetSdkVersion = 28
         minSdkVersion = 19
 
-        versionCode = 110
-        versionName = "1.1.0"
+        versionCode = 111
+        versionName = "1.1.1"
         applicationId = "com.sendinfo.identity"
     }
     dependencies {

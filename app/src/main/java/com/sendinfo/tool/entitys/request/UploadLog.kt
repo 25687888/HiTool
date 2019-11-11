@@ -1,7 +1,7 @@
 package com.sendinfo.tool.entitys.request
 
+import com.blankj.utilcode.util.TimeUtils
 import com.sendinfo.tool.tools.getShebeiCode
-import talex.zsw.basecore.util.TimeTool
 
 /**
  * 日志上传
@@ -18,7 +18,7 @@ class UploadLog {
 
     init {
         terminalCode = getShebeiCode()
-        logTime = TimeTool.getCurTimeString()
+        logTime = TimeUtils.getNowString()
         logLevel = 3
         logContent = ""
         operatorCode = ""

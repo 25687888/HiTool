@@ -1,13 +1,13 @@
 package com.base.library.mvp
 
 import com.base.library.http.HttpDto
+import com.blankj.utilcode.util.LogUtils
 import com.lzy.okgo.model.Response
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import talex.zsw.basecore.util.LogTool
 
 class BModelImpl : BModel {
 
@@ -68,14 +68,14 @@ class BModelImpl : BModel {
     }
 
     private fun printLog(url: String, method: String, data: String) {
-        LogTool.i(
+        LogUtils.i(
             StringBuilder()
                 .appendln("Response 地址 : $url")
                 .appendln("方法 : $method")
                 .appendln("返回数据如下 : ")
                 .toString()
         )
-        LogTool.json(data)
+        LogUtils.json(data)
     }
 
 }

@@ -2,9 +2,8 @@ package com.base.library.database.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import talex.zsw.basecore.util.AppTool
-import talex.zsw.basecore.util.TimeTool
-import talex.zsw.basecore.util.Tool
+import com.blankj.utilcode.util.AppUtils
+import com.blankj.utilcode.util.TimeUtils
 
 @Entity
 class JournalRecord {
@@ -16,12 +15,13 @@ class JournalRecord {
 
     var behavior: String = "" // 行为
 
-    var time: String = TimeTool.getCurTimeString() // 时间
+    var time: String = TimeUtils.getNowString() // 时间
 
     var level: String = "I" // 等级
 
-    var packageName: String = AppTool.getAppPackageName(Tool.getContext()) // 包名
+    var packageName: String = AppUtils.getAppPackageName() // 包名
 
-    var version: String = AppTool.getAppVersionName(Tool.getContext())  // 版本
+    var version: String = AppUtils.getAppVersionName() // 版本
+
 
 }

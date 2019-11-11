@@ -1,9 +1,11 @@
 package com.sendinfo.tool.template.ui
 
 import com.base.library.http.HttpDto
+import com.base.library.util.JsonTool
+import com.base.library.view.other.RxToast
 import com.sendinfo.tool.template.contract.DemoContract
 import com.sendinfo.tool.template.presenter.DemoPresenter
-import com.base.library.view.AlertDialog
+import com.base.library.view.sweetdialog.SweetAlertDialog
 import com.sendinfo.tool.R
 import com.sendinfo.tool.base.BActivity
 import com.sendinfo.tool.entitys.event.EventBean
@@ -11,8 +13,6 @@ import com.sendinfo.tool.entitys.request.base.BodyRequest
 import com.sendinfo.tool.entitys.request.base.FormRequest
 import com.sendinfo.tool.tools.GetTicket
 import org.greenrobot.eventbus.Subscribe
-import talex.zsw.basecore.util.JsonTool
-import talex.zsw.basecore.view.other.RxToast
 
 /**
  * 作用: 使用案例,Activity使用自己定义的Contract和Presenter
@@ -40,7 +40,7 @@ class DemoMvpActivity : BActivity<DemoContract.Presenter>(), DemoContract.View {
     }
 
     override fun loginError(msg: String?) {
-        showDialog(AlertDialog.ERROR_TYPE, msg, "", cancelListener = null)
+        showDialog(SweetAlertDialog.ERROR_TYPE, msg, "", cancelListener = null)
     }
 
     @Subscribe(sticky = true)

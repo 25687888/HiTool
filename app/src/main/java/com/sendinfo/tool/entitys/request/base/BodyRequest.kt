@@ -1,10 +1,9 @@
 package com.sendinfo.tool.entitys.request.base
 
+import com.blankj.utilcode.util.AppUtils
+import com.blankj.utilcode.util.EncryptUtils
+import com.blankj.utilcode.util.TimeUtils
 import com.sendinfo.tool.tools.getShebeiCode
-import talex.zsw.basecore.util.AppTool
-import talex.zsw.basecore.util.EncryptTool
-import talex.zsw.basecore.util.TimeTool
-import talex.zsw.basecore.util.Tool
 import java.io.Serializable
 
 /**
@@ -20,11 +19,11 @@ class BodyRequest : Serializable {
 
     init {
         this.appId = "SDANDROIDSELFTERMANIL"
-        this.requestTime = TimeTool.getCurTimeString()
+        this.requestTime = TimeUtils.getNowString()
         terminalCode = getShebeiCode()
-        version = AppTool.getAppVersionName(Tool.getContext())
+        version = AppUtils.getAppVersionName()
         val signStr = "appId=$appId&requestTime=$requestTime&version=$version&key=1499327191351"
-        sign = EncryptTool.encryptMD5ToString(signStr).toUpperCase()
+        sign = EncryptUtils.encryptMD5ToString(signStr).toUpperCase()
     }
 
     override fun toString(): String {

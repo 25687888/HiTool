@@ -2,6 +2,7 @@ package com.base.library.base
 
 import android.os.Bundle
 import android.os.Handler
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,12 +10,9 @@ import androidx.fragment.app.Fragment
 import com.base.library.mvp.BPresenter
 import com.base.library.mvp.BView
 import com.base.library.util.roomInsertJournalRecord
-import com.base.library.view.AlertDialog
+import com.base.library.view.sweetdialog.SweetAlertDialog
 import com.uber.autodispose.AutoDispose
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
-import io.reactivex.functions.Consumer
-import talex.zsw.basecore.util.LogTool
-import talex.zsw.basecore.util.RegTool
 
 /**
  * MVP Base Fragment封装
@@ -25,7 +23,7 @@ abstract class BMvpFragment<T : BPresenter> : Fragment(), BView {
     abstract fun initData()
 
     var mPresenter: T? = null
-    private var alertDialog: AlertDialog? = null
+    private var sweetAlertDialog: SweetAlertDialog? = null
     private var mView: View? = null
     private var container: ViewGroup? = null
     private var inflater: LayoutInflater? = null
@@ -67,13 +65,16 @@ abstract class BMvpFragment<T : BPresenter> : Fragment(), BView {
     override fun getContext() = activity!!
 
     override fun showDialog(loading: String?) {
-        if (alertDialog != null && alertDialog!!.isShowing) {
-            alertDialog?.setTitleText("正在加载数据")
-            alertDialog?.changeAlertType(AlertDialog.PROGRESS_TYPE)
+        if (sweetAlertDialog != null && sweetAlertDialog!!.isShowing) {
+            sweetAlertDialog?.setTitleText("正在加载数据")
+            sweetAlertDialog?.changeAlertType(SweetAlertDialog.PROGRESS_TYPE)
         } else {
-            alertDialog = AlertDialog(context, AlertDialog.PROGRESS_TYPE).setTitleText("正在加载数据")
-            alertDialog?.setCancelable(false)
-            alertDialog?.show()
+            sweetAlertDialog = SweetAlertDialog(
+                context,
+                SweetAlertDialog.PROGRESS_TYPE
+            ).setTitleText("正在加载数据")
+            sweetAlertDialog?.setCancelable(false)
+            sweetAlertDialog?.show()
         }
     }
 
@@ -88,32 +89,32 @@ abstract class BMvpFragment<T : BPresenter> : Fragment(), BView {
     ) {
         disDialog()
         try {
-            if (alertDialog != null && alertDialog!!.isShowing) {
-                alertDialog?.changeAlertType(alertType)
+            if (sweetAlertDialog != null && sweetAlertDialog!!.isShowing) {
+                sweetAlertDialog?.changeAlertType(alertType)
             } else {
-                alertDialog = AlertDialog(context, alertType)
-                alertDialog?.setCancelable(false)
+                sweetAlertDialog = SweetAlertDialog(context, alertType)
+                sweetAlertDialog?.setCancelable(false)
             }
-            alertDialog?.setTitleText(title) // Title
+            sweetAlertDialog?.setTitleText(title) // Title
             // content
-            if (!RegTool.isNullString(content)) {
-                alertDialog?.setContentText(content)
+            if (!TextUtils.isEmpty(content)) {
+                sweetAlertDialog?.setContentText(content)
             } else {
-                alertDialog?.showContentText(false)
+                sweetAlertDialog?.showContentText(false)
             }
             // confirmText
-            if (!RegTool.isNullString(confirmText)) {
-                alertDialog?.setConfirmText(confirmText)
+            if (!TextUtils.isEmpty(confirmText)) {
+                sweetAlertDialog?.setConfirmText(confirmText)
             }
             // cancelText
-            if (!RegTool.isNullString(cancelText)) {
-                alertDialog?.setCancelText(cancelText)
+            if (!TextUtils.isEmpty(cancelText)) {
+                sweetAlertDialog?.setCancelText(cancelText)
             } else {
-                alertDialog?.showCancelButton(false)
+                sweetAlertDialog?.showCancelButton(false)
             }
-            alertDialog?.setConfirmClickListener(confirmListener)// confirmListener
-            alertDialog?.setCancelClickListener(cancelListener)// confirmListener
-            alertDialog?.show()
+            sweetAlertDialog?.setConfirmClickListener(confirmListener)// confirmListener
+            sweetAlertDialog?.setCancelClickListener(cancelListener)// confirmListener
+            sweetAlertDialog?.show()
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
@@ -134,12 +135,12 @@ abstract class BMvpFragment<T : BPresenter> : Fragment(), BView {
 
     //关闭提示框
     override fun disDialog() {
-        alertDialog?.dismiss()
+        sweetAlertDialog?.dismiss()
     }
 
     //关闭提示框之后销毁页面
     override fun disDialogFinsh() {
-        alertDialog?.dismiss()
+        sweetAlertDialog?.dismiss()
         activity?.finish()
     }
 

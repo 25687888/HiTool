@@ -4,13 +4,14 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/title_bar"
+        android:background="@color/window_background"
         android:orientation="vertical">
 
     <com.sendinfo.tool.views.Titlebar
             android:id="@+id/bTitlebar"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            android:background="@color/newTv"
             android:paddingLeft="@dimen/dp_8"
             android:paddingRight="@dimen/dp_8">
 

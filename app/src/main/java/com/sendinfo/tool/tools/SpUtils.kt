@@ -1,7 +1,7 @@
 package com.sendinfo.tool.tools
 
 import com.base.library.http.HttpDto
-import talex.zsw.basecore.util.SpTool
+import com.base.library.util.SpTool
 
 /**
  * 设备编码

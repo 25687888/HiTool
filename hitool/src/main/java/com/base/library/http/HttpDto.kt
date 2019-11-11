@@ -1,6 +1,9 @@
 package com.base.library.http
 
 import android.text.TextUtils
+import com.base.library.util.JsonTool
+import com.base.library.util.SpTool
+import com.blankj.utilcode.util.LogUtils
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.cache.CacheMode
 import com.lzy.okgo.convert.StringConvert
@@ -8,9 +11,6 @@ import com.lzy.okgo.request.base.BodyRequest
 import com.lzy.okgo.request.base.Request
 import com.lzy.okrx2.adapter.ObservableBody
 import io.reactivex.Observable
-import talex.zsw.basecore.util.JsonTool
-import talex.zsw.basecore.util.LogTool
-import talex.zsw.basecore.util.SpTool
 
 /**
  * 通用的网络请求参数封装 method 请求的标志
@@ -80,7 +80,7 @@ class HttpDto(val method: String) {
         sb.appendln("请求头为 : ")
         heads?.forEach { sb.appendln("${it.key} = ${it.value}") }
         sb.appendln("body参数为 : ")
-        LogTool.i(sb.toString())
+        LogUtils.i(sb.toString())
         if (!TextUtils.isEmpty(bodyJson)) JsonTool.getJsonString(bodyJson)
 
         sb.appendln(bodyJson)

@@ -1,5 +1,4 @@
-package com.base.library.view
-
+package com.base.library.view.sweetdialog
 
 import android.app.Dialog
 import android.content.Context
@@ -8,29 +7,23 @@ import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
-import android.view.animation.AlphaAnimation
-import android.view.animation.Animation
-import android.view.animation.AnimationSet
-import android.view.animation.Transformation
+import android.view.animation.*
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import com.base.library.R
-import talex.zsw.basecore.view.dialog.sweetalertdialog.OptAnimationLoader
-import talex.zsw.basecore.view.dialog.sweetalertdialog.ProgressHelper
-import talex.zsw.basecore.view.dialog.sweetalertdialog.ProgressWheel
-import talex.zsw.basecore.view.dialog.sweetalertdialog.SuccessTickView
 
-class AlertDialog @JvmOverloads constructor(context: Context, alertType: Int = NORMAL_TYPE) : Dialog(context, R.style.alert_dialog), View.OnClickListener {
+class SweetAlertDialog @JvmOverloads constructor(context: Context, alertType: Int = NORMAL_TYPE) :
+    Dialog(context, R.style.alert_dialog), View.OnClickListener {
     private var mDialogView: View? = null
     private val mModalInAnim: AnimationSet
     private val mModalOutAnim: AnimationSet
     private val mOverlayOutAnim: Animation
-    private val mErrorInAnim: Animation
+    private var mErrorInAnim: Animation? = null
     private val mErrorXInAnim: AnimationSet
     private val mSuccessLayoutAnimSet: AnimationSet
-    private val mSuccessBowAnim: Animation
+    private var mSuccessBowAnim: Animation? = null
     private var mTitleTextView: TextView? = null
     private var mContentTextView: TextView? = null
     private var mTitleText: String? = null
@@ -53,7 +46,7 @@ class AlertDialog @JvmOverloads constructor(context: Context, alertType: Int = N
     private var mCancelButton: Button? = null
     val progressHelper: ProgressHelper
     private var mWarningFrame: FrameLayout? = null
-    private var mCancelClickListener:View.OnClickListener? = null
+    private var mCancelClickListener: View.OnClickListener? = null
     private var mConfirmClickListener: View.OnClickListener? = null
     private var mCloseFromCancel: Boolean = false
 
@@ -62,8 +55,9 @@ class AlertDialog @JvmOverloads constructor(context: Context, alertType: Int = N
         setCanceledOnTouchOutside(false)
         progressHelper = ProgressHelper(context)
         alerType = alertType
-        mErrorInAnim = OptAnimationLoader.loadAnimation(getContext(), R.anim.sweetalert_error_frame_in)
-        mErrorXInAnim = OptAnimationLoader.loadAnimation(getContext(), R.anim.sweetalert_error_x_in) as AnimationSet
+        mErrorInAnim = AnimationUtils.loadAnimation(getContext(), R.anim.sweetalert_error_frame_in)
+        mErrorXInAnim = AnimationUtils.loadAnimation(getContext(), R.anim.sweetalert_error_x_in) as AnimationSet
+
         // 2.3.x system don't support alpha-animation on layer-list drawable
         // remove it from animation set
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
@@ -79,11 +73,10 @@ class AlertDialog @JvmOverloads constructor(context: Context, alertType: Int = N
                 childAnims.removeAt(idx)
             }
         }
-        mSuccessBowAnim = OptAnimationLoader.loadAnimation(getContext(), R.anim.success_bow_roate)
-        mSuccessLayoutAnimSet =
-            OptAnimationLoader.loadAnimation(getContext(), R.anim.success_mask_layout) as AnimationSet
-        mModalInAnim = OptAnimationLoader.loadAnimation(getContext(), R.anim.modal_in) as AnimationSet
-        mModalOutAnim = OptAnimationLoader.loadAnimation(getContext(), R.anim.modal_out) as AnimationSet
+        mSuccessBowAnim = AnimationUtils.loadAnimation(getContext(), R.anim.success_bow_roate)
+        mSuccessLayoutAnimSet = AnimationUtils.loadAnimation(getContext(), R.anim.success_mask_layout) as AnimationSet
+        mModalInAnim = AnimationUtils.loadAnimation(getContext(), R.anim.modal_in) as AnimationSet
+        mModalOutAnim = AnimationUtils.loadAnimation(getContext(), R.anim.modal_out) as AnimationSet
         mModalOutAnim.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationStart(animation: Animation) {
 
@@ -93,9 +86,9 @@ class AlertDialog @JvmOverloads constructor(context: Context, alertType: Int = N
                 mDialogView!!.visibility = View.GONE
                 mDialogView!!.post {
                     if (mCloseFromCancel) {
-                        super@AlertDialog.cancel()
+                        super@SweetAlertDialog.cancel()
                     } else {
-                        super@AlertDialog.dismiss()
+                        super@SweetAlertDialog.dismiss()
                     }
                 }
             }
@@ -121,7 +114,7 @@ class AlertDialog @JvmOverloads constructor(context: Context, alertType: Int = N
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.alert_dialog)
+        setContentView(R.layout.sweet_alert_dialog)
         mDialogView = window!!.decorView.findViewById(android.R.id.content)
         mTitleTextView = findViewById<View>(R.id.title_text) as TextView
         mContentTextView = findViewById<View>(R.id.content_text) as TextView
@@ -215,7 +208,7 @@ class AlertDialog @JvmOverloads constructor(context: Context, alertType: Int = N
         return mTitleText
     }
 
-    fun setTitleText(text: String?): AlertDialog {
+    fun setTitleText(text: String?): SweetAlertDialog {
         mTitleText = text
         if (mTitleTextView != null && mTitleText != null) {
             mTitleTextView!!.text = mTitleText
@@ -223,7 +216,7 @@ class AlertDialog @JvmOverloads constructor(context: Context, alertType: Int = N
         return this
     }
 
-    fun setCustomImage(drawable: Drawable?): AlertDialog {
+    fun setCustomImage(drawable: Drawable?): SweetAlertDialog {
         mCustomImgDrawable = drawable
         if (mCustomImage != null && mCustomImgDrawable != null) {
             mCustomImage!!.visibility = View.VISIBLE
@@ -232,7 +225,7 @@ class AlertDialog @JvmOverloads constructor(context: Context, alertType: Int = N
         return this
     }
 
-    fun setCustomImage(resourceId: Int): AlertDialog {
+    fun setCustomImage(resourceId: Int): SweetAlertDialog {
         return setCustomImage(context.resources.getDrawable(resourceId))
     }
 
@@ -240,7 +233,7 @@ class AlertDialog @JvmOverloads constructor(context: Context, alertType: Int = N
         return mContentText
     }
 
-    fun setContentText(text: String?): AlertDialog {
+    fun setContentText(text: String?): SweetAlertDialog {
         mContentText = text
         if (mContentTextView != null && mContentText != null) {
             showContentText(true)
@@ -249,7 +242,7 @@ class AlertDialog @JvmOverloads constructor(context: Context, alertType: Int = N
         return this
     }
 
-    fun showCancelButton(isShow: Boolean): AlertDialog {
+    fun showCancelButton(isShow: Boolean): SweetAlertDialog {
         isShowCancelButton = isShow
         if (mCancelButton != null) {
             mCancelButton!!.visibility = if (isShowCancelButton) View.VISIBLE else View.GONE
@@ -257,7 +250,7 @@ class AlertDialog @JvmOverloads constructor(context: Context, alertType: Int = N
         return this
     }
 
-    fun showContentText(isShow: Boolean): AlertDialog {
+    fun showContentText(isShow: Boolean): SweetAlertDialog {
         isShowContentText = isShow
         if (mContentTextView != null) {
             mContentTextView!!.visibility = if (isShowContentText) View.VISIBLE else View.GONE
@@ -269,7 +262,7 @@ class AlertDialog @JvmOverloads constructor(context: Context, alertType: Int = N
         return mCancelText
     }
 
-    fun setCancelText(text: String?): AlertDialog {
+    fun setCancelText(text: String?): SweetAlertDialog {
         mCancelText = text
         if (mCancelButton != null && mCancelText != null) {
             showCancelButton(true)
@@ -282,7 +275,7 @@ class AlertDialog @JvmOverloads constructor(context: Context, alertType: Int = N
         return mConfirmText
     }
 
-    fun setConfirmText(text: String?): AlertDialog {
+    fun setConfirmText(text: String?): SweetAlertDialog {
         mConfirmText = text
         if (mConfirmButton != null && mConfirmText != null) {
             mConfirmButton!!.text = mConfirmText
@@ -290,12 +283,12 @@ class AlertDialog @JvmOverloads constructor(context: Context, alertType: Int = N
         return this
     }
 
-    fun setCancelClickListener(listener: View.OnClickListener?): AlertDialog {
+    fun setCancelClickListener(listener: View.OnClickListener?): SweetAlertDialog {
         mCancelClickListener = listener
         return this
     }
 
-    fun setConfirmClickListener(listener: View.OnClickListener?): AlertDialog {
+    fun setConfirmClickListener(listener: View.OnClickListener?): SweetAlertDialog {
         mConfirmClickListener = listener
         return this
     }

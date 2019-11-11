@@ -4,14 +4,7 @@ import android.text.TextUtils
 import com.sendinfo.tool.entitys.response.BaseResponse
 import com.base.library.http.HttpDto
 import com.base.library.mvp.BPresenterImpl
-import com.base.library.util.tryCatch
 import com.sendinfo.tool.template.contract.DemoContract
-import com.uber.autodispose.AutoDispose
-import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import talex.zsw.basecore.util.JsonTool
 
 /**
  * 作用: 使用案例,自己定义Presenter
@@ -40,7 +33,7 @@ class DemoPresenter(view: DemoContract.View) : BPresenterImpl<DemoContract.View>
             }
             getData(bRequest)
         } else {
-            mView?.loginError("身份证不能少于18位")
+            mView.loginError("身份证不能少于18位")
         }
     }
 

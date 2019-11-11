@@ -1,11 +1,12 @@
 package com.base.library.mvp
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.base.library.http.HttpDto
-import com.base.library.view.AlertDialog
+import com.base.library.util.JsonTool
+import com.base.library.view.sweetdialog.SweetAlertDialog
+import com.blankj.utilcode.util.LogUtils
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.exception.HttpException
 import com.lzy.okgo.exception.StorageException
@@ -14,8 +15,6 @@ import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import talex.zsw.basecore.util.JsonTool
-import talex.zsw.basecore.util.LogTool
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
@@ -77,14 +76,14 @@ open class BPresenterImpl<T : BView>(var mView: T) : BPresenter, BRequestCallbac
         } else if (throwable is IllegalStateException) {
             content = throwable.message ?: "额...出错了"
         }
-        LogTool.e(content)
+        LogUtils.e(content)
 
         /**
          * 不属于静默加载才弹窗
          */
         if (!baseHttpDto.silence) {
             val fl = if (baseHttpDto.isFinish) mView?.getConfirmFinishListener() else null
-            mView?.showDialog(AlertDialog.ERROR_TYPE, "异常提示", content, confirmListener = fl)
+            mView?.showDialog(SweetAlertDialog.ERROR_TYPE, "异常提示", content, confirmListener = fl)
         }
 
         throwable?.printStackTrace()

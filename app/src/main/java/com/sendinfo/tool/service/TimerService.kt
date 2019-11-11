@@ -8,7 +8,11 @@ import android.text.TextUtils
 import com.base.library.database.DataBaseUtils
 import com.base.library.database.entity.JournalRecord
 import com.base.library.http.HttpDto
+import com.base.library.util.JsonTool
 import com.base.library.util.roomInsertJournalRecord
+import com.blankj.utilcode.constant.TimeConstants
+import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.TimeUtils
 import com.lzy.okgo.callback.StringCallback
 import com.lzy.okgo.model.Response
 import com.sendinfo.tool.entitys.request.base.BodyRequest
@@ -22,9 +26,6 @@ import com.sendinfo.tool.tools.logSave
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import talex.zsw.basecore.util.JsonTool
-import talex.zsw.basecore.util.LogTool
-import talex.zsw.basecore.util.TimeTool
 
 import java.util.ArrayList
 import java.util.Calendar
@@ -60,12 +61,12 @@ class TimerService : Service() {
     @SuppressLint("CheckResult")
     private fun cleanLog() {
         DataBaseUtils.getJournalRecordDao()
-            .deleteFormTime(TimeTool.nDaysAfter(TimeTool.getCurTimeString(), -3))
+            .deleteFormTime(TimeUtils.getString(TimeUtils.getNowString(), -3, TimeConstants.DAY))
             .subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                LogTool.d("删除了多少条:$it") //
+                LogUtils.d("删除了多少条:$it") //
             }, {
-                LogTool.e("删除: $it.localizedMessage")
+                LogUtils.e("删除: $it.localizedMessage")
             })
     }
 
@@ -75,10 +76,10 @@ class TimerService : Service() {
     @SuppressLint("CheckResult")
     private fun uploadLog() {
         DataBaseUtils.getJournalRecordDao()
-            .queryByTime(TimeTool.getCurTimeString(), TimeTool.formatTime(before()))
+            .queryByTime(TimeUtils.getNowString(), TimeUtils.getString(TimeUtils.getNowString(), -5, TimeConstants.MIN))
             .subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                LogTool.d("查询了多少条:${it.size}")
+                LogUtils.d("查询了多少条:${it.size}")
                 val logs = ArrayList<UploadLog>()
                 for (logMessage in it) {
                     val log = UploadLog().apply {
@@ -94,11 +95,11 @@ class TimerService : Service() {
                     val httpDto = HttpDto(logSave).apply { bodyJson = JsonTool.getJsonString(requestBody) }
                     httpDto.getOkGo().execute(object : StringCallback() {
                         override fun onSuccess(response: Response<String>?) {
-                            LogTool.i("上传日志成功,${response?.code()}")
+                            LogUtils.i("上传日志成功,${response?.code()}")
                         }
 
                         override fun onError(response: Response<String>?) {
-                            LogTool.i("上传日志失败,${response?.code()},${response?.message()}")
+                            LogUtils.i("上传日志失败,${response?.code()},${response?.message()}")
                         }
                     })
                 }
@@ -159,7 +160,7 @@ class TimerService : Service() {
 
     @SuppressLint("CheckResult")
     private fun addLog(message: String, behavior: String) {
-        roomInsertJournalRecord(message, behavior, "I").subscribe({ LogTool.d("日志添加成功") }, { LogTool.e("日志添加失败") })
+        roomInsertJournalRecord(message, behavior, "I").subscribe({ LogUtils.d("日志添加成功") }, { LogUtils.e("日志添加失败") })
     }
 
     /**

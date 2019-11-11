@@ -2,8 +2,7 @@ package com.base.library.mvp
 
 import android.content.Context
 import android.view.View
-import com.base.library.view.AlertDialog
-import io.reactivex.functions.Consumer
+import com.base.library.view.sweetdialog.SweetAlertDialog
 
 /**
  * 作用: 基于MVP架构的View 视图基类
@@ -13,7 +12,7 @@ interface BView {
     fun showDialog(loading: String? = "正在加载...")
 
     fun showDialog(
-        alertType: Int = AlertDialog.CUSTOM_IMAGE_TYPE,
+        alertType: Int = SweetAlertDialog.CUSTOM_IMAGE_TYPE,
         title: String? = "提示",
         content: String? = "",
         cancelBtnText: String? = "取消",

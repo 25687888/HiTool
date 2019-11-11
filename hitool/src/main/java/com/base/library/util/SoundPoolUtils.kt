@@ -8,7 +8,7 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import androidx.lifecycle.LifecycleOwner
 import com.base.library.interfaces.MyLifecycleObserver
-import talex.zsw.basecore.util.Tool
+import com.blankj.utilcode.util.Utils
 
 /**
  * 短音频 + 震动
@@ -61,14 +61,14 @@ class SoundPoolUtils : MyLifecycleObserver {
      * 初始化震动
      */
     private fun initVibrator() {
-        mVibrator = Tool.getContext().getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        mVibrator = Utils.getApp().getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
     }
 
     /**
      * resId 音频的资源ID
      */
     fun startPlayVideo(resId: Int) {
-        val load = mSoundPool.load(Tool.getContext(), resId, DEFAULT_PRIORITY)
+        val load = mSoundPool.load(Utils.getApp(), resId, DEFAULT_PRIORITY)
         mSoundPool.setOnLoadCompleteListener { soundPool, sampleId, status ->
             mSoundPool.play(load, LEFT_VOLUME.toFloat(), RIGHT_VOLUME.toFloat(), DEFAULT_PRIORITY, LOOP, RATE)
         }

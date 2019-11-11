@@ -4,12 +4,13 @@ import android.annotation.SuppressLint
 import androidx.multidex.MultiDexApplication
 import com.base.library.BuildConfig
 import com.base.library.util.CockroachUtil
+import com.base.library.util.SpTool
 import com.base.library.util.roomInsertJournalRecord
+import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.Utils
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.https.HttpsUtils
 import okhttp3.OkHttpClient
-import talex.zsw.basecore.util.LogTool
-import talex.zsw.basecore.util.Tool
 
 /**
  * 作用: 程序的入口
@@ -19,10 +20,10 @@ open class BApplication : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
         val startTime = System.currentTimeMillis()//获取开始时间
-        Tool.init(this, true)//basecore库初始化
+        initAndroidUtilCode()
         initHttp()
         if (!BuildConfig.DEBUG) initCockroach()
-        LogTool.d("BApplication启动耗时(ms): ${System.currentTimeMillis() - startTime}")
+        LogUtils.d("BApplication启动耗时(ms): ${System.currentTimeMillis() - startTime}")
     }
 
     /**
@@ -35,7 +36,7 @@ open class BApplication : MultiDexApplication() {
             @SuppressLint("CheckResult")
             override fun handlerException(thread: Thread, throwable: Throwable, info: String) {
                 try {
-                    LogTool.e(info)
+                    LogUtils.e(info)
                     roomInsertJournalRecord(info, "异常-全局", "E").subscribe({}, {})
                 } catch (e: Throwable) {
                 }
@@ -59,5 +60,19 @@ open class BApplication : MultiDexApplication() {
 
         //重连次数,默认三次,最差的情况4次(一次原始请求,三次重连请求),不需要可以设置为0
         OkGo.getInstance().init(this).setOkHttpClient(builder.build()).retryCount = 0
+    }
+
+    /**
+     * 初始化打印日志
+     */
+    private fun initAndroidUtilCode() {
+        Utils.init(this)
+        SpTool.init(this)
+        LogUtils.getConfig().setLogSwitch(BuildConfig.DEBUG)//总开关
+            .setConsoleSwitch(BuildConfig.DEBUG)//控制台开关
+            .setGlobalTag("HJ")//全局 Tag
+            .setFilePrefix("Log") // Log 文件前缀
+            .setBorderSwitch(BuildConfig.DEBUG)//边框开关
+            .stackDeep = 1 //栈深度
     }
 }

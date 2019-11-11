@@ -2,5 +2,5 @@
 
     <string name="bTitleIvLeft">左侧返回按钮</string>
     <string name="bTitleIvCenter">中间图片</string>
-
+    <string name="tool_double_exit">双击退出</string>
 </resources>

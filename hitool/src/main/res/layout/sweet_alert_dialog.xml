@@ -15,7 +15,6 @@
         android:layout_width="53dp"
         android:layout_height="53dp"
         android:layout_marginTop="5dp"
-        android:contentDescription="@string/app_name"
         android:scaleType="fitCenter"
         android:visibility="gone" />
 
@@ -35,7 +34,6 @@
             android:id="@+id/error_x"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="@string/app_name"
             android:scaleType="center"
             android:src="@drawable/sweetalert_error_center_x" />
 
@@ -74,7 +72,7 @@
             android:layout_height="match_parent"
             android:background="@drawable/sweetalert_success_circle" />
 
-        <talex.zsw.basecore.view.dialog.sweetalertdialog.SuccessTickView
+        <com.base.library.view.sweetdialog.SuccessTickView
             android:id="@+id/success_tick"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
@@ -96,7 +94,6 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="@string/app_name"
             android:scaleType="center"
             android:src="@drawable/sweetalert_warning_sigh" />
     </FrameLayout>
@@ -110,7 +107,7 @@
         android:orientation="vertical"
         android:visibility="gone">
 
-        <talex.zsw.basecore.view.dialog.sweetalertdialog.ProgressWheel
+        <com.base.library.view.sweetdialog.ProgressWheel
             android:id="@+id/progressWheel"
             android:layout_width="80dp"
             android:layout_height="80dp"

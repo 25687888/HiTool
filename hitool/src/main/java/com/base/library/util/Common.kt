@@ -5,8 +5,6 @@ import android.content.res.Resources
 import android.util.TypedValue
 import com.base.library.database.DataBaseUtils
 import com.base.library.database.entity.JournalRecord
-import com.blankj.utilcode.util.FileUtils
-import com.blankj.utilcode.util.Utils
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -14,7 +12,7 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 
 /**
- *  @desc:工具类,增加FileUtils的扩展函数及常用的内联函数
+ *  @desc:工具类,扩展函数及常用的内联函数
  */
 //添加日志记录到数据库
 fun roomInsertJournalRecord(content: String, behavior: String, level: String): Single<Long> = DataBaseUtils
@@ -50,7 +48,7 @@ val Int.sp: Int
         TypedValue.COMPLEX_UNIT_SP, this.toFloat(), Resources.getSystem().displayMetrics
     ).toInt()
 
-fun Utils.tryCatch(tryBlock: () -> Unit, catchBlock: (Throwable) -> Unit = {}) {
+fun tryCatch(tryBlock: () -> Unit, catchBlock: (Throwable) -> Unit = {}) {
     try {
         tryBlock()
     } catch (t: Throwable) {
@@ -62,7 +60,7 @@ fun Utils.tryCatch(tryBlock: () -> Unit, catchBlock: (Throwable) -> Unit = {}) {
 /**
  * 从assets文件中读取数据
  */
-fun FileUtils.getFromAssets(context: Context, fileName: String): String {
+fun getFromAssets(context: Context, fileName: String): String {
     val sb = StringBuilder()
     try {
         val inputReader = InputStreamReader(context.resources.assets.open(fileName))
@@ -87,7 +85,7 @@ fun FileUtils.getFromAssets(context: Context, fileName: String): String {
  */
 private var mLastClickTime: Long = 0
 private const val MIN_CLICK_DELAY_TIME = 800
-fun Utils.isFast(): Boolean {
+fun isFast(): Boolean {
     val currentTime = System.currentTimeMillis() // 当前时间
     val time = currentTime - mLastClickTime // 两次时间差
     if (time in 1 until MIN_CLICK_DELAY_TIME) return true

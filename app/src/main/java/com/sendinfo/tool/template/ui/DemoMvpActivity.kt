@@ -25,7 +25,7 @@ class DemoMvpActivity : BActivity<DemoContract.Presenter>(), DemoContract.View {
 
     override fun initData() {
         //播放声音示例
-        soundPoolUtils?.startPlayVideo(R.raw.area)
+        soundPoolTool?.startPlayVideo(R.raw.area)
         //发起网络请求示例 body方式
         var httpDto = HttpDto(GetTicket).apply { bodyJson = JsonTool.getJsonString(BodyRequest()) }
         mPresenter?.getData(httpDto)

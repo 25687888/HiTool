@@ -13,7 +13,7 @@ import com.blankj.utilcode.util.Utils
 /**
  * 短音频 + 震动
  */
-class SoundPoolUtils : MyLifecycleObserver {
+class SoundPoolTool : MyLifecycleObserver {
     private lateinit var owner: LifecycleOwner
 
     override fun onCreate(owner: LifecycleOwner) {

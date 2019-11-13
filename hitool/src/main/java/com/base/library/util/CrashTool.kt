@@ -9,7 +9,7 @@ import com.blankj.utilcode.util.TimeUtils
 /**
  * 异常拦截
  */
-object CockroachUtil {
+object CrashTool {
 
     private var sExceptionHandler: ExceptionHandler? = null
     private var sUncaughtExceptionHandler: Thread.UncaughtExceptionHandler? = null
@@ -47,7 +47,7 @@ object CockroachUtil {
         Thread.setDefaultUncaughtExceptionHandler(sUncaughtExceptionHandler)
         Handler(Looper.getMainLooper()).post {
             //主线程抛出异常，迫使 while (true) {}结束
-            throw QuitCockroachException("Quit CockroachUtil.....")
+            throw QuitCockroachException("Quit CrashTool.....")
         }
     }
 
@@ -63,7 +63,7 @@ object CockroachUtil {
                 "\nApp VersionName    : " + AppUtils.getAppVersionName() +
                 "\nApp VersionCode    : " + AppUtils.getAppVersionCode() +
                 "\n************* Log Head ****************\n\n"
-        sb.append(head).append(ThrowableUtils.getFullStackTrace(e))
+        sb.append(head).append(ThrowableTool.getFullStackTrace(e))
         return sb.toString()
     }
 

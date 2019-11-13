@@ -5,7 +5,7 @@ import java.io.StringWriter
 import java.util.ArrayList
 import java.util.StringTokenizer
 
-class ThrowableUtils private constructor() {
+class ThrowableTool private constructor() {
 
     init {
         throw UnsupportedOperationException("u can't instantiate me...")

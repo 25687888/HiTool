@@ -3,7 +3,7 @@ package com.base.library.base
 import android.annotation.SuppressLint
 import androidx.multidex.MultiDexApplication
 import com.base.library.BuildConfig
-import com.base.library.util.CockroachUtil
+import com.base.library.util.CrashTool
 import com.base.library.util.SpTool
 import com.base.library.util.roomInsertJournalRecord
 import com.blankj.utilcode.util.LogUtils
@@ -32,7 +32,7 @@ open class BApplication : MultiDexApplication() {
      * 以防handlerException内部再次抛出异常，导致循环调用handlerException
      */
     private fun initCockroach() {
-        CockroachUtil.install(object : CockroachUtil.ExceptionHandler {
+        CrashTool.install(object : CrashTool.ExceptionHandler {
             @SuppressLint("CheckResult")
             override fun handlerException(thread: Thread, throwable: Throwable, info: String) {
                 try {

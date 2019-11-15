@@ -44,7 +44,7 @@ object RxToast {
 
     private val TOAST_TYPEFACE = "sans-serif-condensed"
 
-    private lateinit var currentToast: Toast
+    private var currentToast: Toast?=null
 
     //*******************************************普通 使用ApplicationContext 方法*********************
     /**
@@ -288,9 +288,7 @@ object RxToast {
         message: String, icon: Drawable?,
         @ColorInt textColor: Int, @ColorInt tintColor: Int, duration: Int, withIcon: Boolean, shouldTint: Boolean
     ): Toast {
-        if (currentToast == null) {
-            currentToast = Toast(context)
-        }
+        if (currentToast == null) currentToast = Toast(context)
         val toastLayout = (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(
             R.layout.toast_layout,
             null
@@ -321,7 +319,7 @@ object RxToast {
 
         currentToast?.view = toastLayout
         currentToast?.duration = duration
-        return currentToast
+        return currentToast as Toast
     }
 
     fun tint9PatchDrawableFrame(context: Context, @ColorInt tintColor: Int): Drawable {

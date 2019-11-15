@@ -39,13 +39,7 @@ android {
         checkReleaseBuilds false
         abortOnError false
     }
-    splits {
-        abi {
-            enable true
-            reset()
-            include 'armeabi'//只打包armeabi平台的，就算有其他文件夹也不管
-        }
-    }
+
     compileOptions {
         targetCompatibility 1.8
         sourceCompatibility 1.8
@@ -68,6 +62,8 @@ dependencies {
     api 'com.gyf.immersionbar:immersionbar:3.0.0-beta07'
     api 'com.gyf.immersionbar:immersionbar-components:3.0.0-beta07'
     api 'com.gyf.immersionbar:immersionbar-ktx:3.0.0-beta07'
+
+    debugImplementation project(path: ':hitool')
     implementation project(path: ':hitool')
 //    implementation 'com.github.25687888:HiTool:latest.release'
 }

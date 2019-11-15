@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.github.dcendents.android-maven'
-group='com.github.25687888'
+group = 'com.github.25687888'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
@@ -18,7 +18,21 @@ android {
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true//使用矢量图配置
     }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
 
+        unsigned {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
     lintOptions {
         abortOnError false
     }
@@ -27,6 +41,7 @@ android {
         targetCompatibility 1.8
         sourceCompatibility 1.8
     }
+    publishNonDefault true //支持多个版本 debug release版本
 }
 
 dependencies {
@@ -96,7 +111,7 @@ task sourcesJar(type: Jar) {
 }
 
 task javadoc(type: Javadoc) {
-    failOnError  false
+    failOnError false
     source = android.sourceSets.main.java.sourceFiles
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
     classpath += configurations.compile

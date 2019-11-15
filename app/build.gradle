@@ -62,7 +62,8 @@ dependencies {
     api 'com.gyf.immersionbar:immersionbar:3.0.0-beta07'
     api 'com.gyf.immersionbar:immersionbar-components:3.0.0-beta07'
     api 'com.gyf.immersionbar:immersionbar-ktx:3.0.0-beta07'
-
-//    implementation project(path: ':hitool')
-    implementation 'com.github.25687888:HiTool:latest.release'
+    // 内存泄漏leakcanary
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-beta-2'
+    implementation project(path: ':hitool')
+//    implementation 'com.github.25687888:HiTool:latest.release'
 }

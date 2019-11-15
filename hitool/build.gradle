@@ -41,7 +41,6 @@ android {
         targetCompatibility 1.8
         sourceCompatibility 1.8
     }
-    publishNonDefault true //支持多个版本 debug release版本
 }
 
 dependencies {

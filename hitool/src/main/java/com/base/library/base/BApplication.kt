@@ -2,7 +2,6 @@ package com.base.library.base
 
 import android.annotation.SuppressLint
 import androidx.multidex.MultiDexApplication
-import com.base.library.BuildConfig
 import com.base.library.util.CrashTool
 import com.base.library.util.SpTool
 import com.base.library.util.roomInsertJournalRecord
@@ -11,18 +10,21 @@ import com.blankj.utilcode.util.Utils
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.https.HttpsUtils
 import okhttp3.OkHttpClient
+import android.content.pm.ApplicationInfo
+
 
 /**
  * 作用: 程序的入口
  */
 open class BApplication : MultiDexApplication() {
-
+    var isDebug = false
     override fun onCreate() {
         super.onCreate()
         val startTime = System.currentTimeMillis()//获取开始时间
+        isDebug = applicationInfo != null && applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
         initAndroidUtilCode()
         initHttp()
-        if (!BuildConfig.DEBUG) initCockroach()
+        if (!isDebug) initCockroach()
         LogUtils.d("BApplication启动耗时(ms): ${System.currentTimeMillis() - startTime}")
     }
 
@@ -68,11 +70,12 @@ open class BApplication : MultiDexApplication() {
     private fun initAndroidUtilCode() {
         Utils.init(this)
         SpTool.init(this)
-        LogUtils.getConfig().setLogSwitch(BuildConfig.DEBUG)//总开关
-            .setConsoleSwitch(BuildConfig.DEBUG)//控制台开关
+        LogUtils.getConfig().setLogSwitch(isDebug)//总开关
+            .setConsoleSwitch(isDebug)//控制台开关
             .setGlobalTag("HJ")//全局 Tag
             .setFilePrefix("Log") // Log 文件前缀
-            .setBorderSwitch(BuildConfig.DEBUG)//边框开关
+            .setBorderSwitch(isDebug)//边框开关
             .stackDeep = 1 //栈深度
     }
+
 }

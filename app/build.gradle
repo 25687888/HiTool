@@ -63,7 +63,6 @@ dependencies {
     api 'com.gyf.immersionbar:immersionbar-components:3.0.0-beta07'
     api 'com.gyf.immersionbar:immersionbar-ktx:3.0.0-beta07'
 
-    debugImplementation project(path: ':hitool')
-    implementation project(path: ':hitool')
-//    implementation 'com.github.25687888:HiTool:latest.release'
+//    implementation project(path: ':hitool')
+    implementation 'com.github.25687888:HiTool:latest.release'
 }

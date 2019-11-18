@@ -3,21 +3,19 @@
 V1.0.0(20191023)
 library库基本功能介绍：
     1、基于kotlin的Mvp封装 BActivity BFragment (Server Mvp后续更新)
-    2、数据层：网络框架采用OkGo网络框架（内部集成了Retrofit2框架不够灵活 后续更新）、本地日志数据库采用Room
-    3、工具库使用BaseCore 0.0.54（权限请求工具类、图片工具类、日志工具类、MMKV工具类等）
+    2、数据层：网络框架采用OkGo网络框架、本地日志数据库采用Room
+    3、权限请求工具类、图片工具类、日志工具类、MMKV工具类
     已经集成的库：
     1、AndroidX系列
     2、Room数据库
     3、kotlin
     4、网络基础框架okhttp3.0
     5、网络框架okgo
-    6、网络框架retrofit
-    7、智能刷新框架SmartRefreshLayout
-    8、内存泄漏检测工具 leakcanary
-    9、性能检测工具 doraemonkit
-    10、解决RxJava内存泄漏 autodispose
-    11、glide
-    12、lottie
+    6、智能刷新框架SmartRefreshLayout
+    7、内存泄漏检测工具 leakcanary
+    8、解决RxJava内存泄漏 autodispose
+    9、glide
+    10、lottie
     。。。等
 
 app主要功能介绍：

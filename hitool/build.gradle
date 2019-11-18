@@ -45,15 +45,15 @@ android {
 
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
-    api 'androidx.cardview:cardview:1.0.0'
-    api 'androidx.multidex:multidex:2.0.1'
-    api 'androidx.appcompat:appcompat:1.1.0' //v7
-    api 'androidx.legacy:legacy-support-v4:1.0.0'  //v4
-    api 'androidx.recyclerview:recyclerview:1.0.0'
-    api 'com.google.android.material:material:1.0.0' //design
+    api 'androidx.cardview:cardview:1.0.0-rc01'
+    api 'androidx.appcompat:appcompat:1.1.0-rc01' //v7
+    api 'androidx.legacy:legacy-support-v4:1.0.0-rc01'  //v4
+    api 'androidx.recyclerview:recyclerview:1.0.0-rc01'
+    api 'com.google.android.material:material:1.2.0-alpha01' //design
 //    api 'androidx.percentlayout:percentlayout:1.0.0' //百分比布局
 //    api 'androidx.vectordrawable:vectordrawable:1.0.0' //矢量
     api 'androidx.constraintlayout:constraintlayout:1.1.3'
+    api 'androidx.multidex:multidex:2.0.1'
 
     // Room
     api "androidx.room:room-runtime:2.2.1"

@@ -5,6 +5,7 @@ import com.base.library.mvp.BasePresenter
 import com.base.library.mvp.BaseView
 import com.base.library.util.glide.GlideApp
 import com.base.library.util.glide.GlideTool
+import com.base.library.view.other.RxToast
 import com.base.library.view.sweetdialog.SweetAlertDialog
 import com.sendinfo.tool.R
 import com.sendinfo.tool.base.BActivity
@@ -21,6 +22,7 @@ class MainMvpActivity : BActivity<BPresenter>(), BaseView {
 
     override fun initView() {
         tvCenter.text = "首页"
+        RxToast.info("首页")
         tvCenter.setOnClickListener {
             startActivity(intentFor<DemoMvpActivity>())
         }

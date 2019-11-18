@@ -8,12 +8,10 @@ import android.net.http.SslError
 import android.os.Build
 import android.text.TextUtils
 import android.view.View
-import android.webkit.SslErrorHandler
-import android.webkit.WebChromeClient
-import android.webkit.WebSettings
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import android.widget.ProgressBar
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import java.util.regex.Pattern
 
 /**
@@ -91,7 +89,7 @@ object WebViewTool {
                 }
 
                 /** 网页页面开始加载的时候，执行的回调方法  */
-                override fun onPageStarted(view: WebView, url: String, favicon: Bitmap) {//网页页面开始加载的时候
+                override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {//网页页面开始加载的时候
                     mWebView.isEnabled = false// 当加载网页的时候将网页进行隐藏
                     super.onPageStarted(view, url, favicon)
                 }
@@ -103,6 +101,11 @@ object WebViewTool {
                     //判断标题 title 中是否包含有“error”字段，如果包含“error”字段，则设置加载失败，显示加载失败的视图
                     if (!TextUtils.isEmpty(title) && title.toLowerCase().contains("error")) {
                     }
+                }
+
+                @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+                override fun onPermissionRequest(request: PermissionRequest?) {
+                    request?.grant(request.resources)
                 }
 
                 override fun onProgressChanged(view: WebView, newProgress: Int) {

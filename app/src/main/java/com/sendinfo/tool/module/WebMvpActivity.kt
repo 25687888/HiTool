@@ -16,7 +16,8 @@ import com.sendinfo.tool.R
 class WebMvpActivity : BActivity<BPresenter>(), BaseView {
 
     //        var url = "https://voice.starhonour.com/MobilesXinQiao.html"
-    var url = "https://www.xfyun.cn/services/voicedictation"
+    var url = "https://www.xfyun.cn/services/voicedictation"//科大讯飞官网地址
+//    var url = "https://api.chafang.me/iat_ws_js_demo/src/index.html"
 
     override fun bindPresenter(): BPresenter = BasePresenter(this)
 
@@ -28,6 +29,7 @@ class WebMvpActivity : BActivity<BPresenter>(), BaseView {
             .permission(
                 PermissionConstants.STORAGE,
                 PermissionConstants.MICROPHONE,
+                PermissionConstants.CAMERA,
                 PermissionConstants.LOCATION
             )
             .callback(object : PermissionUtils.FullCallback {

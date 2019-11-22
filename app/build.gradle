@@ -44,6 +44,11 @@ android {
         targetCompatibility 1.8
         sourceCompatibility 1.8
     }
+    android.applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "Test_${releaseTime()}.apk"
+        }
+    }
 }
 
 repositories {

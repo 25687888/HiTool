@@ -12,4 +12,25 @@
         <item name="android:backgroundDimEnabled">false</item>
     </style>
 
+    <style name="Btn_Blue_CS">
+        <item name="android:textColor">@color/color_blue</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:paddingTop">@dimen/dp_8</item>
+        <item name="android:paddingBottom">@dimen/dp_8</item>
+        <item name="android:paddingLeft">@dimen/dp_12</item>
+        <item name="android:paddingRight">@dimen/dp_12</item>
+        <item name="android:background">@drawable/btn_blue_cs</item>
+    </style>
+
+    <style name="et_setting">
+        <item name="android:background">@drawable/bg_edit</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/dp_5</item>
+        <item name="android:minHeight">55dp</item>
+        <item name="android:layout_margin">30dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/text_black2</item>
+    </style>
 </resources>

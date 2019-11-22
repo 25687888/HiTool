@@ -84,3 +84,13 @@ fun putTakeNumber(takeNumber: Int) {
 
 fun getTakeNumber(): Int = SpTool.getInt("takeNumber", 100)
 
+/**
+ * 设置网页默认路径
+ */
+fun putWebUrl(webUrl: String) {
+    SpTool.saveString("webUrl", webUrl)
+}
+
+fun getWebUrl(): String = SpTool.getString("webUrl", "https://api.chafang.me/iat_ws_js_demo/src/index.html")
+
+

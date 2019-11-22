@@ -1,5 +1,7 @@
 package com.sendinfo.tool.module
 
+import android.view.View
+import android.widget.ProgressBar
 import com.base.library.mvp.BPresenter
 import com.base.library.mvp.BasePresenter
 import com.base.library.mvp.BaseView
@@ -9,22 +11,23 @@ import kotlinx.android.synthetic.main.activity_web.*
 import kotlinx.android.synthetic.main.b_titlebar.*
 import com.blankj.utilcode.constant.PermissionConstants
 import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.NetworkUtils
 import com.blankj.utilcode.util.PermissionUtils
 import com.sendinfo.tool.R
+import com.sendinfo.tool.tools.getWebUrl
+import com.sendinfo.tool.tools.putWebUrl
+import com.sendinfo.tool.views.dialogs.InputDialog
 
 
 class WebMvpActivity : BActivity<BPresenter>(), BaseView {
-
-    //        var url = "https://voice.starhonour.com/MobilesXinQiao.html"
-    var url = "https://www.xfyun.cn/services/voicedictation"//科大讯飞官网地址
-//    var url = "https://api.chafang.me/iat_ws_js_demo/src/index.html"
 
     override fun bindPresenter(): BPresenter = BasePresenter(this)
 
     override fun setContentView(): Int = R.layout.activity_web
 
     override fun initView() {
-        tvCenter?.text = "网页测试"
+        bTitlebar?.visibility = View.GONE
+        pingNet()
         PermissionUtils
             .permission(
                 PermissionConstants.STORAGE,
@@ -46,12 +49,42 @@ class WebMvpActivity : BActivity<BPresenter>(), BaseView {
 
     override fun initData() {
         super.initData()
-        WebViewTool.setWebData(url, webView, null)
+        viewChange.setOnClickListener { showInputDialog() }
+        webView.setOnLongClickListener { true }
+        WebViewTool.setWebData(getWebUrl(), webView, null)
     }
 
     override fun bindData(bodyStr: String) {
     }
 
     override fun bindError(string: String) {
+    }
+
+    private var inputDialog: InputDialog? = null
+    private fun showInputDialog() {
+        inputDialog?.dismiss()
+        inputDialog = InputDialog(this).setTitleText("网页链接").setContentText(getWebUrl())
+        inputDialog?.setConfirmClickListener(View.OnClickListener {
+            inputDialog?.dismiss()
+            putWebUrl(inputDialog?.getContentText() ?: "")
+            WebViewTool.setWebData(getWebUrl(), webView, ProgressBar(this))
+        })
+        inputDialog?.show()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        inputDialog?.dismiss()
+    }
+
+    private var netIsOK = false
+    private fun pingNet() {
+        mHandler.postDelayed({
+            NetworkUtils.isAvailableAsync {
+                netIsOK = it
+                if (!netIsOK) pingNet()
+                else webView.reload()
+            }
+        }, 2000)
     }
 }

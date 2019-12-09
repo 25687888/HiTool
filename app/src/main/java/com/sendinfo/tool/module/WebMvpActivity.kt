@@ -1,5 +1,7 @@
 package com.sendinfo.tool.module
 
+import android.Manifest.permission.ACCESS_COARSE_LOCATION
+import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.os.SystemClock
 import android.view.View
 import androidx.core.content.ContextCompat
@@ -20,8 +22,11 @@ import com.sendinfo.tool.tools.putWebUrl
 import com.sendinfo.tool.views.dialogs.InputDialog
 import com.blankj.utilcode.util.PermissionUtils.FullCallback
 import com.sendinfo.tool.tools.JsBridge
+import com.sendinfo.tool.tools.LocationTool
 
 class WebMvpActivity : BActivity<BPresenter>(), BaseView {
+    private var jsBridge = JsBridge()
+    private val locationTool: LocationTool by lazy { LocationTool(getContext()).apply { lifecycle.addObserver(this) } }
 
     override fun bindPresenter(): BPresenter = BasePresenter(this)
 
@@ -37,19 +42,26 @@ class WebMvpActivity : BActivity<BPresenter>(), BaseView {
             PermissionConstants.LOCATION
         ).callback(object : FullCallback {
             override fun onGranted(permissionsGranted: List<String>) {
+                if (permissionsGranted.contains(ACCESS_COARSE_LOCATION) || permissionsGranted.contains(ACCESS_FINE_LOCATION)) {
+                    locationTool.getLocation {
+                        LogUtils.json(it)
+                        jsBridge.locationStr = "${it.latitude},${it.longitude},${it.address}"
+                    }
+                }
             }
 
             override fun onDenied(permissionsDeniedForever: List<String>, permissionsDenied: List<String>) {
                 LogUtils.d(permissionsDeniedForever, permissionsDenied)
             }
         }).request()
+
     }
 
     override fun initData() {
         super.initData()
         setDoubleClick { showInputDialog() }
         webView.setOnLongClickListener { true }
-        webView.addJavascriptInterface(JsBridge(), "jsBridge")//js映射
+        webView.addJavascriptInterface(jsBridge, "jsBridge")//js映射
         webProgress.setColor(ContextCompat.getColor(this, R.color.colorAccent))
         WebViewTool.setWebData(getWebUrl(), webView, webProgress)
     }

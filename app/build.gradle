@@ -22,9 +22,23 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
+    signingConfigs {
+        release {
+            storeFile file("sign/alirelease.jks")
+            storePassword "send1234"
+            keyAlias "sendinfo"
+            keyPassword "send1234"
+        }
+    }
     buildTypes {
+        debug {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
         release {
             minifyEnabled false
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -71,4 +85,6 @@ dependencies {
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-beta-2'
     implementation project(path: ':hitool')
 //    implementation 'com.github.25687888:HiTool:latest.release'
+
+    implementation 'com.amap.api:location:latest.integration'//高德地图定位
 }

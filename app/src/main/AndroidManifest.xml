@@ -45,6 +45,10 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
+
+        <!--高德地图定位-->
+        <meta-data android:name="com.amap.api.v2.apikey" android:value="4d8b3bf39b3b281aa17a8cfa7782a507"/>
+        <service android:name="com.amap.api.location.APSService" android:foregroundServiceType="location" tools:targetApi="q"/>
     </application>
 
 </manifest>

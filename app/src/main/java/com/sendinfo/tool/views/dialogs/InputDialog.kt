@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import com.blankj.utilcode.util.DeviceUtils
 import com.sendinfo.tool.R
 
 class InputDialog(context: Context) : Dialog(context, R.style.DialogStyle) {
@@ -47,6 +48,7 @@ class InputDialog(context: Context) : Dialog(context, R.style.DialogStyle) {
         if (mConfirmText != null) {
             mConfirmButton?.text = mConfirmText
         }
+        findViewById<TextView>(R.id.tvInfo).text = "当前设备唯一编码： ${DeviceUtils.getUniqueDeviceId()}"
     }
 
     fun getContentText(): String = etInfo?.text.toString().trim()

@@ -91,6 +91,10 @@ fun putWebUrl(webUrl: String) {
     SpTool.saveString("webUrl", webUrl)
 }
 
-fun getWebUrl(): String = SpTool.getString("webUrl", "https://api.chafang.me/iat_ws_js_demo/src/index.html")
-
-
+fun getWebUrl(): String =
+    SpTool.getString("webUrl", "https://www.runtopys.com")// 正式地址
+//    SpTool.getString("webUrl", "https://api.chafang.me/iat_ws_js_demo/src/index.html")// 测试地址
+//    SpTool.getString("webUrl", "https://www.runtopys.com/hotelDetail/39")//测试地址
+//    SpTool.getString("webUrl", "http://obs-da80.obs.cn-east-3.myhuaweicloud.com/20191126002120v05itg.wav")//测试地址
+//    SpTool.getString("webUrl", "https://lbs.amap.com/api/javascript-api/example/location/browser-location")//测试地址
+//    SpTool.getString("webUrl", "file:///android_asset/demo.html")//本地测试网页

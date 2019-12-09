@@ -10,5 +10,11 @@
             android:id="@+id/viewChange"
             android:layout_width="@dimen/dp_200"
             android:layout_height="@dimen/dp_200"/>
+    <com.base.library.util.webview.WebProgress
+            android:id="@+id/webProgress"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_3"
+            android:layout_alignParentTop="true"/>
 </RelativeLayout>
 

@@ -1,6 +1,6 @@
-package com.base.library.util
+package com.base.library.util.webview
 
-import android.annotation.TargetApi
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -11,24 +11,28 @@ import android.view.View
 import android.webkit.*
 import android.widget.ProgressBar
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
+import com.blankj.utilcode.util.LogUtils
 import java.util.regex.Pattern
+import android.content.Context.MODE_PRIVATE
 
 /**
  * 作用: WebView工具类
- * 作者: 赵小白 email:vvtale@gmail.com  
- * 日期: 2018/5/21 16:29 
- * 修改人：
- * 修改时间：
- * 修改备注：
  */
 object WebViewTool {
-    fun setWebData(content: String, mWebView: WebView, mProgressBar: ProgressBar?) {
-        var content = content
+    @SuppressLint("SetJavaScriptEnabled")
+    fun setWebData(content: String, mWebView: WebView, mProgressBar: WebProgress?) {
         // 设置WebView的属性，此时可以去执行JavaScript脚本`
         mWebView.settings.javaScriptEnabled = true // 设置支持javascript脚本
         mWebView.settings.allowFileAccess = true // 允许访问文件
-        mWebView.settings.javaScriptCanOpenWindowsAutomatically = true
+        mWebView.settings.databaseEnabled = true // 允许访问数据库
+        mWebView.settings.saveFormData = true // 允许缓存form数据
+        mWebView.settings.setGeolocationEnabled(true) // 允许定位
+
+        val dir = mWebView.context.getDir("database", MODE_PRIVATE).path
+        mWebView.settings.setGeolocationDatabasePath(dir) //设置定位的数据库路径
+        mWebView.settings.domStorageEnabled = true//开启DomStorage缓存
+
+        mWebView.settings.javaScriptCanOpenWindowsAutomatically = true//允许打开窗口
         mWebView.settings.layoutAlgorithm = WebSettings.LayoutAlgorithm.SINGLE_COLUMN
         mWebView.settings.defaultTextEncodingName = "UTF-8"//设置默认为utf-8
         //		mWebView.getSettings().setDefaultFontSize( (int) (46 / scale) );
@@ -52,29 +56,31 @@ object WebViewTool {
         //解决图片不显示
         mWebView.settings.blockNetworkImage = false
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mWebView.settings.mixedContentMode = 0
+            mWebView.settings.mixedContentMode = 0//解决http和https混合使用问题
         }
         val ua = mWebView.settings.userAgentString
         mWebView.settings.useWideViewPort = true
         mWebView.settings.loadWithOverviewMode = true
-        if (content.startsWith("http://") || content.startsWith("https://")) {
+        mWebView.settings.mediaPlaybackRequiresUserGesture = false//解决音视频不播放问题
+        if (content.startsWith("http://") || content.startsWith("https://") || content.startsWith("file:///")) {
             mWebView.settings.useWideViewPort = true
             mWebView.settings.loadWithOverviewMode = true
 
             if (mProgressBar != null) {
                 mProgressBar.visibility = View.VISIBLE
-                mProgressBar.max = 100
+                mProgressBar.show()
             }
 
             // 当webview里面能点击是 在当前页面上显示！
             mWebView.webViewClient = object : WebViewClient() {
                 override fun shouldOverrideUrlLoading(view: WebView, url: String?): Boolean {
+                    LogUtils.i(url)
                     if (url == null) {
                         return false
                     }
 
                     try {
-                        if (url.startsWith("http:") || url.startsWith("https:")) {
+                        if (url.startsWith("http:") || url.startsWith("https:") || content.startsWith("file:///")) {
                             view.loadUrl(url)
                             return true
                         } else {
@@ -93,9 +99,17 @@ object WebViewTool {
                     mWebView.isEnabled = false// 当加载网页的时候将网页进行隐藏
                     super.onPageStarted(view, url, favicon)
                 }
+
+                override fun onReceivedSslError(view: WebView, handler: SslErrorHandler, error: SslError) {
+                    handler.proceed()
+                    //handler.cancel(); 默认的处理方式，WebView变成空白页
+                    //handler.process();接受证书
+                    //handleMessage(Message msg); 其他处理
+                }
             }
 
             mWebView.webChromeClient = object : WebChromeClient() {
+
                 /** 当WebView加载之后，返回 HTML 页面的标题 Title  */
                 override fun onReceivedTitle(view: WebView, title: String) {
                     //判断标题 title 中是否包含有“error”字段，如果包含“error”字段，则设置加载失败，显示加载失败的视图
@@ -103,6 +117,16 @@ object WebViewTool {
                     }
                 }
 
+                /** 定位权限  */
+                override fun onGeolocationPermissionsShowPrompt(
+                    origin: String?,
+                    callback: GeolocationPermissions.Callback?
+                ) {
+                    callback?.invoke(origin, true, false)
+                    super.onGeolocationPermissionsShowPrompt(origin, callback)
+                }
+
+                /** 录音视频及相机权限  */
                 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
                 override fun onPermissionRequest(request: PermissionRequest?) {
                     request?.grant(request.resources)
@@ -110,13 +134,12 @@ object WebViewTool {
 
                 override fun onProgressChanged(view: WebView, newProgress: Int) {
                     if (mProgressBar != null) {
-                        mProgressBar.progress = newProgress
+                        mProgressBar.setProgress(newProgress)
                         if (newProgress == 100) {
                             mProgressBar.visibility = View.GONE
                         } else {
                             if (mProgressBar.visibility == View.GONE) {
                                 mProgressBar.visibility = View.VISIBLE
-                                // pb.setProgress(newProgress);
                             }
                         }
                     }
@@ -152,6 +175,7 @@ object WebViewTool {
 
             mWebView.loadUrl(content)
         } else {
+            var content = content
             content = "<style>\n" + "    img {\n" + "        max-width: 100%;\n" + "        width: 100%;\n" +
                     "        height: auto\n" + "    }\n" + "    \n" + "    div {\n" + "        width: 100%;\n" +
                     "        max-width: 100%;\n" + "        height: auto\n" + "    }\n" + "    \n" + "    p {\n" +
@@ -198,13 +222,8 @@ object WebViewTool {
                 // mWebView.loadData(fmtString(content), "text/html", "utf-8");
             }
         }
-        if (Build.VERSION.SDK_INT > 10 && Build.VERSION.SDK_INT < 17) {
-            fixWebView(mWebView)
+        if (Build.VERSION.SDK_INT in 11..16) {
+            mWebView.removeJavascriptInterface("searchBoxJavaBridge_")
         }
-    }
-
-    @TargetApi(11)
-    private fun fixWebView(mWebView: WebView) {
-        mWebView.removeJavascriptInterface("searchBoxJavaBridge_")
     }
 }

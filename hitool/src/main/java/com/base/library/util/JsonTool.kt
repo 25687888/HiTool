@@ -25,13 +25,7 @@ import java.util.HashMap
 import java.util.TreeMap
 
 /**
- * 项目名称: BaseProject
  * 作用: Json解析,拼装类
- * 作者: 赵小白 email:vvtale@gmail.com  
- * 日期: 2015-11-09 14:02 
- * 修改人：
- * 修改时间：
- * 修改备注：
  */
 object JsonTool {
     private val gson: Gson

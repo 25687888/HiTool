@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import com.base.library.mvp.BPresenter
 import com.base.library.mvp.BView
 import com.base.library.util.roomInsertJournalRecord
+import com.base.library.view.sweetdialog.BSweetAlertDialog
 import com.base.library.view.sweetdialog.SweetAlertDialog
 import com.uber.autodispose.AutoDispose
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
@@ -21,9 +22,10 @@ abstract class BMvpFragment<T : BPresenter> : Fragment(), BView {
     abstract fun initArgs(bundle: Bundle?)
     abstract fun initView(bundle: Bundle?)
     abstract fun initData()
+    abstract fun getSweetAlertDialog(): BSweetAlertDialog?
 
     var mPresenter: T? = null
-    private var sweetAlertDialog: SweetAlertDialog? = null
+    private var sweetAlertDialog: BSweetAlertDialog? = null
     private var mView: View? = null
     private var container: ViewGroup? = null
     private var inflater: LayoutInflater? = null
@@ -67,14 +69,16 @@ abstract class BMvpFragment<T : BPresenter> : Fragment(), BView {
     override fun showDialog(loading: String?) {
         if (sweetAlertDialog != null && sweetAlertDialog!!.isShowing) {
             sweetAlertDialog?.setTitleText("正在加载数据")
-            sweetAlertDialog?.changeAlertType(SweetAlertDialog.PROGRESS_TYPE)
+            sweetAlertDialog?.changeAlertType(BSweetAlertDialog.PROGRESS_TYPE)
         } else {
-            sweetAlertDialog = SweetAlertDialog(
-                context,
-                SweetAlertDialog.PROGRESS_TYPE
-            ).setTitleText("正在加载数据")
+            if (getSweetAlertDialog() != null) {
+                sweetAlertDialog = getSweetAlertDialog()
+            } else {
+                sweetAlertDialog = SweetAlertDialog(context, BSweetAlertDialog.PROGRESS_TYPE)
+            }
+            sweetAlertDialog?.changeAlertType(BSweetAlertDialog.PROGRESS_TYPE)
+            sweetAlertDialog?.setTitleText("正在加载数据")
             sweetAlertDialog?.setCancelable(false)
-            sweetAlertDialog?.show()
         }
     }
 
@@ -92,7 +96,12 @@ abstract class BMvpFragment<T : BPresenter> : Fragment(), BView {
             if (sweetAlertDialog != null && sweetAlertDialog!!.isShowing) {
                 sweetAlertDialog?.changeAlertType(alertType)
             } else {
-                sweetAlertDialog = SweetAlertDialog(context, alertType)
+                if (getSweetAlertDialog() != null) {
+                    sweetAlertDialog = getSweetAlertDialog()
+                } else {
+                    sweetAlertDialog = SweetAlertDialog(context, alertType)
+                }
+                sweetAlertDialog?.changeAlertType(alertType)
                 sweetAlertDialog?.setCancelable(false)
             }
             sweetAlertDialog?.setTitleText(title) // Title

@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.base.library.mvp.BPresenter
 import com.base.library.mvp.BView
 import com.base.library.util.roomInsertJournalRecord
+import com.base.library.view.sweetdialog.BSweetAlertDialog
 import com.base.library.view.sweetdialog.SweetAlertDialog
 import com.uber.autodispose.AutoDispose
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
@@ -22,11 +23,12 @@ abstract class BMvpActivity<T : BPresenter> : AppCompatActivity(), BView {
     abstract fun initArgs(intent: Intent?)
     abstract fun initContentView()
     abstract fun initData()
+    abstract fun getSweetAlertDialog(): BSweetAlertDialog?
 
     var mPresenter: T? = null
     val mHandler: Handler by lazy { Handler() }
     val mApplication: BApplication by lazy { application as BApplication }
-    private var sweetAlertDialog: SweetAlertDialog? = null
+    private var sweetAlertDialog: BSweetAlertDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,14 +57,16 @@ abstract class BMvpActivity<T : BPresenter> : AppCompatActivity(), BView {
     override fun showDialog(loading: String?) {
         if (sweetAlertDialog != null && sweetAlertDialog!!.isShowing) {
             sweetAlertDialog?.setTitleText("正在加载数据")
-            sweetAlertDialog?.changeAlertType(SweetAlertDialog.PROGRESS_TYPE)
+            sweetAlertDialog?.changeAlertType(BSweetAlertDialog.PROGRESS_TYPE)
         } else {
-            sweetAlertDialog = SweetAlertDialog(
-                this,
-                SweetAlertDialog.PROGRESS_TYPE
-            ).setTitleText("正在加载数据")
+            if (getSweetAlertDialog() != null) {
+                sweetAlertDialog = getSweetAlertDialog()
+            } else {
+                sweetAlertDialog = SweetAlertDialog(this, BSweetAlertDialog.PROGRESS_TYPE)
+            }
+            sweetAlertDialog?.changeAlertType(BSweetAlertDialog.PROGRESS_TYPE)
+            sweetAlertDialog?.setTitleText("正在加载数据")
             sweetAlertDialog?.setCancelable(false)
-            sweetAlertDialog?.show()
         }
     }
 
@@ -80,7 +84,12 @@ abstract class BMvpActivity<T : BPresenter> : AppCompatActivity(), BView {
             if (sweetAlertDialog != null && sweetAlertDialog!!.isShowing) {
                 sweetAlertDialog?.changeAlertType(alertType)
             } else {
-                sweetAlertDialog = SweetAlertDialog(this, alertType)
+                if (getSweetAlertDialog() != null) {
+                    sweetAlertDialog = getSweetAlertDialog()
+                } else {
+                    sweetAlertDialog = SweetAlertDialog(this, alertType)
+                }
+                sweetAlertDialog?.changeAlertType(alertType)
                 sweetAlertDialog?.setCancelable(false)
             }
             sweetAlertDialog?.setTitleText(title)

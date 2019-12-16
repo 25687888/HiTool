@@ -1,6 +1,5 @@
 package com.base.library.view.sweetdialog
 
-import android.app.Dialog
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Build
@@ -14,8 +13,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.base.library.R
 
-class SweetAlertDialog @JvmOverloads constructor(context: Context, alertType: Int = NORMAL_TYPE) :
-    Dialog(context, R.style.alert_dialog), View.OnClickListener {
+class SweetAlertDialog(context: Context, alertType: Int = NORMAL_TYPE) : BSweetAlertDialog(context, R.style.alert_dialog), View.OnClickListener {
     private var mDialogView: View? = null
     private val mModalInAnim: AnimationSet
     private val mModalOutAnim: AnimationSet
@@ -199,7 +197,7 @@ class SweetAlertDialog @JvmOverloads constructor(context: Context, alertType: In
         }
     }
 
-    fun changeAlertType(alertType: Int) {
+    override fun changeAlertType(alertType: Int) {
         changeAlertType(alertType, false)
     }
 
@@ -208,7 +206,7 @@ class SweetAlertDialog @JvmOverloads constructor(context: Context, alertType: In
         return mTitleText
     }
 
-    fun setTitleText(text: String?): SweetAlertDialog {
+    override fun setTitleText(text: String?): SweetAlertDialog {
         mTitleText = text
         if (mTitleTextView != null && mTitleText != null) {
             mTitleTextView!!.text = mTitleText
@@ -233,7 +231,7 @@ class SweetAlertDialog @JvmOverloads constructor(context: Context, alertType: In
         return mContentText
     }
 
-    fun setContentText(text: String?): SweetAlertDialog {
+    override fun setContentText(text: String?): SweetAlertDialog {
         mContentText = text
         if (mContentTextView != null && mContentText != null) {
             showContentText(true)
@@ -242,7 +240,7 @@ class SweetAlertDialog @JvmOverloads constructor(context: Context, alertType: In
         return this
     }
 
-    fun showCancelButton(isShow: Boolean): SweetAlertDialog {
+    override fun showCancelButton(isShow: Boolean): SweetAlertDialog {
         isShowCancelButton = isShow
         if (mCancelButton != null) {
             mCancelButton!!.visibility = if (isShowCancelButton) View.VISIBLE else View.GONE
@@ -250,7 +248,7 @@ class SweetAlertDialog @JvmOverloads constructor(context: Context, alertType: In
         return this
     }
 
-    fun showContentText(isShow: Boolean): SweetAlertDialog {
+    override fun showContentText(isShow: Boolean): SweetAlertDialog {
         isShowContentText = isShow
         if (mContentTextView != null) {
             mContentTextView!!.visibility = if (isShowContentText) View.VISIBLE else View.GONE
@@ -262,7 +260,7 @@ class SweetAlertDialog @JvmOverloads constructor(context: Context, alertType: In
         return mCancelText
     }
 
-    fun setCancelText(text: String?): SweetAlertDialog {
+    override fun setCancelText(text: String?): SweetAlertDialog {
         mCancelText = text
         if (mCancelButton != null && mCancelText != null) {
             showCancelButton(true)
@@ -275,7 +273,7 @@ class SweetAlertDialog @JvmOverloads constructor(context: Context, alertType: In
         return mConfirmText
     }
 
-    fun setConfirmText(text: String?): SweetAlertDialog {
+    override fun setConfirmText(text: String?): SweetAlertDialog {
         mConfirmText = text
         if (mConfirmButton != null && mConfirmText != null) {
             mConfirmButton!!.text = mConfirmText
@@ -283,12 +281,12 @@ class SweetAlertDialog @JvmOverloads constructor(context: Context, alertType: In
         return this
     }
 
-    fun setCancelClickListener(listener: View.OnClickListener?): SweetAlertDialog {
+    override fun setCancelClickListener(listener: View.OnClickListener?): SweetAlertDialog {
         mCancelClickListener = listener
         return this
     }
 
-    fun setConfirmClickListener(listener: View.OnClickListener?): SweetAlertDialog {
+    override fun setConfirmClickListener(listener: View.OnClickListener?): SweetAlertDialog {
         mConfirmClickListener = listener
         return this
     }
@@ -332,15 +330,5 @@ class SweetAlertDialog @JvmOverloads constructor(context: Context, alertType: In
                 dismissWithAnimation()
             }
         }
-    }
-
-    companion object {
-
-        val NORMAL_TYPE = 0
-        val ERROR_TYPE = 1
-        val SUCCESS_TYPE = 2
-        val WARNING_TYPE = 3
-        val CUSTOM_IMAGE_TYPE = 4
-        val PROGRESS_TYPE = 5
     }
 }

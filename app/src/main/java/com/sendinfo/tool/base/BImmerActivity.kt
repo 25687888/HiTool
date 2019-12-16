@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import com.base.library.base.BMvpActivity
 import com.base.library.mvp.BPresenter
 import com.base.library.util.SoundPoolTool
+import com.base.library.view.sweetdialog.BSweetAlertDialog
 import com.gyf.immersionbar.ImmersionBar
 import com.sendinfo.tool.R
 import kotlinx.android.synthetic.main.activity_base.*
@@ -17,6 +18,8 @@ abstract class BImmerActivity<T : BPresenter> : BMvpActivity<T>() {
     val soundPoolTool: SoundPoolTool by lazy { SoundPoolTool().apply { lifecycle.addObserver(this) } }
 
     abstract fun setContentView(): Int
+
+    override fun getSweetAlertDialog(): BSweetAlertDialog? = null//使用默认加载对话框
 
     /**
      * 页面传值

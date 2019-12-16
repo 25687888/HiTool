@@ -4,9 +4,8 @@ import com.base.library.mvp.BPresenter
 import com.base.library.mvp.BasePresenter
 import com.base.library.mvp.BaseView
 import com.base.library.util.glide.GlideApp
-import com.base.library.util.glide.GlideTool
 import com.base.library.view.other.RxToast
-import com.base.library.view.sweetdialog.SweetAlertDialog
+import com.base.library.view.sweetdialog.BSweetAlertDialog
 import com.sendinfo.tool.R
 import com.sendinfo.tool.base.BActivity
 import com.sendinfo.tool.template.ui.DemoMvpActivity
@@ -27,7 +26,7 @@ class MainMvpActivity : BActivity<BPresenter>(), BaseView {
             startActivity(intentFor<DemoMvpActivity>())
         }
         showDialog(
-            SweetAlertDialog.NORMAL_TYPE,
+            BSweetAlertDialog.NORMAL_TYPE,
             "Test",
             "this is test title text!",
             confirmListener = getConfirmDisListener()

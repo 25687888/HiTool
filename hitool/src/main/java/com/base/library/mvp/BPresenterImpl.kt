@@ -5,7 +5,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.base.library.http.HttpDto
 import com.base.library.util.JsonTool
-import com.base.library.view.sweetdialog.SweetAlertDialog
+import com.base.library.view.sweetdialog.BSweetAlertDialog
 import com.blankj.utilcode.util.LogUtils
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.exception.HttpException
@@ -83,7 +83,7 @@ open class BPresenterImpl<T : BView>(var mView: T) : BPresenter, BRequestCallbac
          */
         if (!baseHttpDto.silence) {
             val fl = if (baseHttpDto.isFinish) mView?.getConfirmFinishListener() else null
-            mView?.showDialog(SweetAlertDialog.ERROR_TYPE, "异常提示", content, confirmListener = fl)
+            mView?.showDialog(BSweetAlertDialog.ERROR_TYPE, "异常提示", content, confirmListener = fl)
         }
 
         throwable?.printStackTrace()

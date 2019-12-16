@@ -67,6 +67,7 @@ abstract class BMvpActivity<T : BPresenter> : AppCompatActivity(), BView {
             sweetAlertDialog?.changeAlertType(BSweetAlertDialog.PROGRESS_TYPE)
             sweetAlertDialog?.setTitleText("正在加载数据")
             sweetAlertDialog?.setCancelable(false)
+            sweetAlertDialog?.show()
         }
     }
 

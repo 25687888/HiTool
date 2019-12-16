@@ -13,8 +13,8 @@ interface BView {
 
     fun showDialog(
         alertType: Int = BSweetAlertDialog.CUSTOM_IMAGE_TYPE,
-        title: String? = "提示",
-        content: String? = "",
+        title: String? = null,
+        content: String? = null,
         cancelBtnText: String? = "取消",
         confirmBtnText: String? = "确定",
         confirmListener: View.OnClickListener? = null, // 确定按钮回调

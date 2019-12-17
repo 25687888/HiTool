@@ -13,7 +13,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.base.library.R
 
-class SweetAlertDialog(context: Context, alertType: Int = NORMAL_TYPE) : BSweetAlertDialog(context, R.style.alert_dialog), View.OnClickListener {
+class SweetAlertDialog(context: Context, alertType: Int = NORMAL_TYPE) :
+    BSweetAlertDialog(context, R.style.alert_dialog), View.OnClickListener {
     private var mDialogView: View? = null
     private val mModalInAnim: AnimationSet
     private val mModalOutAnim: AnimationSet
@@ -187,8 +188,8 @@ class SweetAlertDialog(context: Context, alertType: Int = NORMAL_TYPE) : BSweetA
                 }
                 CUSTOM_IMAGE_TYPE -> setCustomImage(mCustomImgDrawable)
                 PROGRESS_TYPE -> {
-                    mProgressFrame!!.visibility = View.VISIBLE
-                    mConfirmButton!!.visibility = View.GONE
+                    mProgressFrame?.visibility = View.VISIBLE
+                    mConfirmButton?.visibility = View.GONE
                 }
             }
             if (!fromCreate) {
@@ -242,17 +243,13 @@ class SweetAlertDialog(context: Context, alertType: Int = NORMAL_TYPE) : BSweetA
 
     override fun showCancelButton(isShow: Boolean): SweetAlertDialog {
         isShowCancelButton = isShow
-        if (mCancelButton != null) {
-            mCancelButton!!.visibility = if (isShowCancelButton) View.VISIBLE else View.GONE
-        }
+        mCancelButton?.visibility = if (isShowCancelButton) View.VISIBLE else View.GONE
         return this
     }
 
     override fun showContentText(isShow: Boolean): SweetAlertDialog {
         isShowContentText = isShow
-        if (mContentTextView != null) {
-            mContentTextView!!.visibility = if (isShowContentText) View.VISIBLE else View.GONE
-        }
+        mContentTextView?.visibility = if (isShowContentText) View.VISIBLE else View.GONE
         return this
     }
 
@@ -264,7 +261,7 @@ class SweetAlertDialog(context: Context, alertType: Int = NORMAL_TYPE) : BSweetA
         mCancelText = text
         if (mCancelButton != null && mCancelText != null) {
             showCancelButton(true)
-            mCancelButton!!.text = mCancelText
+            mCancelButton?.text = mCancelText
         }
         return this
     }

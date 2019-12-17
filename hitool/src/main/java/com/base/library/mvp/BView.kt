@@ -15,8 +15,8 @@ interface BView {
         alertType: Int = BSweetAlertDialog.CUSTOM_IMAGE_TYPE,
         title: String? = null,
         content: String? = null,
-        cancelBtnText: String? = null,
         confirmBtnText: String? = "确定",
+        cancelBtnText: String? = null,
         confirmListener: View.OnClickListener? = null, // 确定按钮回调
         cancelListener: View.OnClickListener? = null // 取消按钮回调
     )

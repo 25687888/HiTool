@@ -74,8 +74,8 @@ abstract class BMvpActivity<T : BPresenter> : AppCompatActivity(), BView {
         alertType: Int,
         title: String?,
         content: String?,
-        cancelText: String?,
         confirmText: String?,
+        cancelText: String?,
         confirmListener: View.OnClickListener?,
         cancelListener: View.OnClickListener?
     ) {

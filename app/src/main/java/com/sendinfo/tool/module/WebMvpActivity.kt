@@ -2,12 +2,12 @@ package com.sendinfo.tool.module
 
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
-import android.os.SystemClock
 import android.view.View
 import androidx.core.content.ContextCompat
 import com.base.library.mvp.BPresenter
 import com.base.library.mvp.BasePresenter
 import com.base.library.mvp.BaseView
+import com.base.library.util.setThreeClick
 import com.base.library.util.webview.WebViewTool
 import com.sendinfo.tool.base.BActivity
 import kotlinx.android.synthetic.main.activity_web.*
@@ -58,7 +58,7 @@ class WebMvpActivity : BActivity<BPresenter>(), BaseView {
 
     override fun initData() {
         super.initData()
-        setDoubleClick { showInputDialog() }
+        viewChange?.setThreeClick { showInputDialog()  }
         webView.setOnLongClickListener { true }
         webView.addJavascriptInterface(jsBridge, "jsBridge")//js映射
         webProgress.setColor(ContextCompat.getColor(this, R.color.colorAccent))
@@ -97,20 +97,5 @@ class WebMvpActivity : BActivity<BPresenter>(), BaseView {
                 else webView.reload()
             }
         }, 2000)
-    }
-
-    /**
-     * 顶部设置三击事件
-     */
-    private val mHits = LongArray(3)
-
-    private fun setDoubleClick(listenerBlock: () -> Unit) {
-        viewChange?.setOnClickListener {
-            System.arraycopy(mHits, 1, mHits, 0, mHits.size - 1)
-            mHits[mHits.size - 1] = SystemClock.uptimeMillis()//获取手机开机时间
-            if (mHits[mHits.size - 1] - mHits[0] < 500) {
-                listenerBlock()//三击事件
-            }
-        }
     }
 }

@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply from: 'tinker-support.gradle'// 热更新配置信息
 
 kapt {
     generateStubs = true
@@ -17,8 +18,8 @@ android {
         applicationId rootProject.applicationId
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode rootProject.versionCode
-        versionName rootProject.versionName
+        versionCode = rootProject.versionCode
+        versionName = rootProject.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -58,11 +59,11 @@ android {
         targetCompatibility 1.8
         sourceCompatibility 1.8
     }
-    android.applicationVariants.all { variant ->
-        variant.outputs.all {
-            outputFileName = "Test_${releaseTime()}.apk"
-        }
-    }
+//    android.applicationVariants.all { variant ->
+//        variant.outputs.all {
+//            outputFileName = "Test_${releaseTime()}.apk"
+//        }
+//    }
 }
 
 repositories {
@@ -87,4 +88,9 @@ dependencies {
 //    implementation 'com.github.25687888:HiTool:latest.release'
 
     implementation 'com.amap.api:location:latest.integration'//高德地图定位
+
+    // 热更新tinker
+    implementation 'com.tencent.tinker:tinker-android-lib:latest.release'// 指定tinker依赖版本
+    implementation 'com.tencent.bugly:nativecrashreport:latest.release' //crash统计
+    implementation 'com.tencent.bugly:crashreport_upgrade:latest.release'//版本升级
 }

@@ -44,7 +44,6 @@ class WebMvpActivity : BActivity<BPresenter>(), BaseView {
             override fun onGranted(permissionsGranted: List<String>) {
                 if (permissionsGranted.contains(ACCESS_COARSE_LOCATION) || permissionsGranted.contains(ACCESS_FINE_LOCATION)) {
                     locationTool.getLocation {
-                        LogUtils.json(it)
                         jsBridge.locationStr = "${it.latitude},${it.longitude},${it.address}"
                     }
                 }

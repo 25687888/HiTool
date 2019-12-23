@@ -1,29 +1,32 @@
 [![](https://jitpack.io/v/25687888/HiTool.svg)](https://jitpack.io/#25687888/HiTool)
-作者：HuJian，邮箱地址：2568788852@qq.com
-V1.0.0(20191023)
-library库基本功能介绍：
-    1、基于kotlin的Mvp封装 BActivity BFragment (Server Mvp后续更新)
-    2、数据层：网络框架采用OkGo网络框架、本地日志数据库采用Room
-    3、权限请求工具类、图片工具类、日志工具类、MMKV工具类
-    已经集成的库：
-    1、AndroidX系列
-    2、Room数据库
-    3、kotlin
-    4、网络基础框架okhttp3.0
-    5、网络框架okgo
-    6、智能刷新框架SmartRefreshLayout
-    7、内存泄漏检测工具 leakcanary
-    8、解决RxJava内存泄漏 autodispose
-    9、glide
-    10、lottie
-    。。。等
+###### 作者：HuJian，邮箱地址：2568788852@qq.com
 
-app主要功能介绍：
-    1、BActivity沉浸式简易封装
-    2、mvp示例、网络请求调用示例
+---
 
-2019-12-18
-    app中增加tinker热更新功能
+### 一、library库基本功能介绍：
+1. 基于kotlin的Mvp封装 BActivity BFragment (Server Mvp后续更新)
+1. 数据层：网络框架采用OkGo网络框架、本地日志数据库采用Room
+1. 权限请求工具类、图片工具类、日志工具类、MMKV工具类
+1. 增加热更新功能
 
-待更新
-    （OKGO多任务下载封装、修改工具库、常用UI控件在APP中集成。。。）
+
+### 二、已经集成的库：
+- AndroidX系列
+- Room数据库
+- kotlin
+- 网络基础框架okhttp3.0
+- 网络框架okgo
+- 智能刷新框架SmartRefreshLayout
+- 内存泄漏检测工具 leakcanary
+- 解决RxJava内存泄漏 autodispose
+- glide
+- lottie
+
+### 三、app主要功能介绍：
+1. BActivity沉浸式简易封装
+1. mvp示例、网络请求调用示例
+1. webView使用示例
+
+### 待更新内容：
+- okgo增加网络多任务文件下载
+- kotlin Coroutines替换RXJava

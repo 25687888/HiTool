@@ -74,16 +74,17 @@ class HttpDto(val method: String) {
         val sb = StringBuilder()
         sb.appendln("请求地址 : $url")
         sb.appendln("请求方法 : $method")
-        sb.appendln("扩展字段 : ${JsonTool.getJsonString(extendField)}")
+        sb.appendln("扩展字段 :")
+        extendField?.let { sb.appendln(JsonTool.getJsonString(extendField)) }
         sb.appendln("params参数为 : ")
         params?.forEach { sb.appendln("${it.key} = ${it.value}") }
         sb.appendln("请求头为 : ")
         heads?.forEach { sb.appendln("${it.key} = ${it.value}") }
-        sb.appendln("body参数为 : ")
+        sb.appendln("bodyJson参数为 : ")
+        if (!TextUtils.isEmpty(bodyJson)) sb.appendln(bodyJson)
+        sb.appendln("bodyStr参数为 : ")
+        if (!TextUtils.isEmpty(bodyString)) sb.appendln(bodyString)
         LogUtils.i(sb.toString())
-        if (!TextUtils.isEmpty(bodyJson)) JsonTool.getJsonString(bodyJson)
-
-        sb.appendln(bodyJson)
         return sb.toString()
     }
 

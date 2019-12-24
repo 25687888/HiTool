@@ -3,7 +3,7 @@
 
 ---
 
-### 一、library库基本功能介绍：
+### 一、hitool库基本功能介绍：
 1. 基于kotlin的Mvp封装 BActivity BFragment (Server Mvp后续更新)
 1. 数据层：网络框架采用OkGo网络框架、本地日志数据库采用Room
 1. 权限请求工具类、图片工具类、日志工具类、MMKV工具类

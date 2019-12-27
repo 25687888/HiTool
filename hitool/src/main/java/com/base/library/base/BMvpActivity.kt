@@ -11,6 +11,7 @@ import com.base.library.mvp.BView
 import com.base.library.util.roomInsertJournalRecord
 import com.base.library.view.sweetdialog.BSweetAlertDialog
 import com.base.library.view.sweetdialog.SweetAlertDialog
+import com.blankj.utilcode.util.LogUtils
 import com.uber.autodispose.AutoDispose
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
 import org.greenrobot.eventbus.EventBus
@@ -145,9 +146,9 @@ abstract class BMvpActivity<T : BPresenter> : AppCompatActivity(), BView {
         roomInsertJournalRecord(content, behavior, level)
             .`as`(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(this)))
             .subscribe({
-                //                LogUtils.d("插入的主键是:$it")
+                LogUtils.d("插入的主键是:$it")
             }, {
-                //                LogUtils.e("删除:$it.localizedMessage")
+                LogUtils.e("删除:$it.localizedMessage")
             })
     }
 

@@ -76,7 +76,7 @@ class TimerService : Service() {
     @SuppressLint("CheckResult")
     private fun uploadLog() {
         DataBaseUtils.getJournalRecordDao()
-            .queryByTime(TimeUtils.getNowString(), TimeUtils.getString(TimeUtils.getNowString(), -5, TimeConstants.MIN))
+            .queryByTime(TimeUtils.getString(TimeUtils.getNowString(), -5, TimeConstants.MIN), TimeUtils.getNowString())
             .subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 LogUtils.d("查询了多少条:${it.size}")

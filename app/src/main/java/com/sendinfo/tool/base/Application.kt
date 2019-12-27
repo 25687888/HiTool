@@ -40,23 +40,22 @@ class Application : BApplication() {
             }
 
             override fun onDownloadSuccess(msg: String) {
-                Toast.makeText(mContext, "补丁下载成功", Toast.LENGTH_SHORT).show()
+                LogUtils.i("补丁下载成功")
             }
 
             override fun onDownloadFailure(msg: String) {
-                Toast.makeText(mContext, "补丁下载失败", Toast.LENGTH_SHORT).show()
+                LogUtils.i("补丁下载失败")
             }
 
             override fun onApplySuccess(msg: String) {
-                Toast.makeText(mContext, "补丁更新成功", Toast.LENGTH_SHORT).show()
+                LogUtils.i("补丁更新成功")
             }
 
             override fun onApplyFailure(msg: String) {
-                Toast.makeText(mContext, "补丁更新失败", Toast.LENGTH_SHORT).show()
+                LogUtils.i("补丁更新失败")
             }
 
             override fun onPatchRollback() {
-
             }
         }
 

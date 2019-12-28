@@ -40,6 +40,25 @@ object GlideTool {
     }
 
     /**
+     * 加载图片
+     *
+     * @param v   ImageView
+     * @param uri
+     */
+    fun loadImg(v: ImageView, uri: Any) {
+        LogUtils.i("IMG", uri)
+        GlideApp
+            .with(v.context)
+            .load(uri)
+            .placeholder(ColorDrawable(-0xf0f10))
+            .error(ColorDrawable(-0xf0f10))
+            .fallback(ColorDrawable(-0xf0f10))
+            .transition(DrawableTransitionOptions.withCrossFade())
+            .fitCenter()
+            .into(v)
+    }
+
+    /**
      * 加载图片,设置占位图
      *
      * @param v      ImageView

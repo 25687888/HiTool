@@ -32,9 +32,6 @@ object GlideTool {
         GlideApp
             .with(v.context)
             .load(uri)
-            .placeholder(ColorDrawable(-0xf0f10))
-            .error(ColorDrawable(-0xf0f10))
-            .fallback(ColorDrawable(-0xf0f10))
             .transition(DrawableTransitionOptions.withCrossFade())
             .fitCenter()
             .into(v)

@@ -20,30 +20,12 @@ import java.util.concurrent.ExecutionException
  * 作用: GlideTool
  */
 object GlideTool {
-    /**
-     * 加载图片
-     *
-     * @param v   ImageView
-     * @param url 图片URL
-     */
-    fun loadImg(v: ImageView, url: String) {
-        LogUtils.i("IMG", url)
-        GlideApp
-            .with(v.context)
-            .load(url)
-            .placeholder(ColorDrawable(-0xf0f10))
-            .error(ColorDrawable(-0xf0f10))
-            .fallback(ColorDrawable(-0xf0f10))
-            .transition(DrawableTransitionOptions.withCrossFade())
-            .fitCenter()
-            .into(v)
-    }
 
     /**
      * 加载图片
      *
      * @param v   ImageView
-     * @param uri
+     * @param uri 图片路径 本地图片或Drawble图片或者网络图片
      */
     fun loadImg(v: ImageView, uri: Any) {
         LogUtils.i("IMG", uri)
@@ -111,9 +93,6 @@ object GlideTool {
         GlideApp
             .with(v.context)
             .load(url)
-            .placeholder(ColorDrawable(-0xf0f10))
-            .error(ColorDrawable(-0xf0f10))
-            .fallback(ColorDrawable(-0xf0f10))
             .transition(DrawableTransitionOptions.withCrossFade())
             .override(width, height)
             .into(v)
@@ -132,9 +111,6 @@ object GlideTool {
             .with(v.context)
             .asBitmap()
             .load(url)
-            .placeholder(ColorDrawable(-0xf0f10))
-            .error(ColorDrawable(-0xf0f10))
-            .fallback(ColorDrawable(-0xf0f10))
             .transition(BitmapTransitionOptions.withCrossFade())
             .transform(transformation)
             .into(v)
@@ -152,9 +128,6 @@ object GlideTool {
         GlideApp
             .with(v.context)
             .load(url)
-            .placeholder(ColorDrawable(-0xf0f10))
-            .error(ColorDrawable(-0xf0f10))
-            .fallback(ColorDrawable(-0xf0f10))
             .transition(DrawableTransitionOptions.withCrossFade())
             .centerCrop()
             .into(v)
@@ -172,9 +145,6 @@ object GlideTool {
         GlideApp
             .with(v.context)
             .load(url)
-            .placeholder(ColorDrawable(-0xf0f10))
-            .error(ColorDrawable(-0xf0f10))
-            .fallback(ColorDrawable(-0xf0f10))
             .transition(DrawableTransitionOptions.withCrossFade())
             .centerInside()
             .into(v)
@@ -192,9 +162,6 @@ object GlideTool {
         GlideApp
             .with(v.context)
             .load(url)
-            .placeholder(ColorDrawable(-0xf0f10))
-            .error(ColorDrawable(-0xf0f10))
-            .fallback(ColorDrawable(-0xf0f10))
             .transition(DrawableTransitionOptions.withCrossFade())
             .fitCenter()
             .into(v)
@@ -267,9 +234,6 @@ object GlideTool {
         GlideApp
             .with(v.context)
             .load(url)
-            .placeholder(ColorDrawable(-0xf0f10))
-            .error(ColorDrawable(-0xf0f10))
-            .fallback(ColorDrawable(-0xf0f10))
             .transition(DrawableTransitionOptions.withCrossFade())
             .transform(RoundedCorners(11))
             .into(v)
@@ -287,9 +251,6 @@ object GlideTool {
         GlideApp
             .with(v.context)
             .load(url)
-            .placeholder(ColorDrawable(-0xf0f10))
-            .error(ColorDrawable(-0xf0f10))
-            .fallback(ColorDrawable(-0xf0f10))
             .transition(DrawableTransitionOptions.withCrossFade())
             .transform(RoundedCorners(roundingRadius))
             .into(v)
@@ -306,9 +267,6 @@ object GlideTool {
         GlideApp
             .with(v.context)
             .load(url)
-            .placeholder(ColorDrawable(-0xf0f10))
-            .error(ColorDrawable(-0xf0f10))
-            .fallback(ColorDrawable(-0xf0f10))
             .transition(DrawableTransitionOptions.withCrossFade())
             .skipMemoryCache(true)
             .diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -327,9 +285,6 @@ object GlideTool {
             .with(context)
             .asBitmap()
             .load(url)
-            .placeholder(ColorDrawable(-0xf0f10))
-            .error(ColorDrawable(-0xf0f10))
-            .fallback(ColorDrawable(-0xf0f10))
             .transition(BitmapTransitionOptions.withCrossFade())
             .into(target)
     }

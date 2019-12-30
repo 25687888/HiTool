@@ -36,43 +36,48 @@ class FullyLinearLayoutManager : LinearLayoutManager {
         recycler: RecyclerView.Recycler, state: RecyclerView.State,
         widthSpec: Int, heightSpec: Int
     ) {
-        val widthMode = View.MeasureSpec.getMode(widthSpec)
-        val heightMode = View.MeasureSpec.getMode(heightSpec)
-        val widthSize = View.MeasureSpec.getSize(widthSpec)
-        val heightSize = View.MeasureSpec.getSize(heightSpec)
+        val count = state.itemCount
+        if (count > 0) {
+            val widthMode = View.MeasureSpec.getMode(widthSpec)
+            val heightMode = View.MeasureSpec.getMode(heightSpec)
+            val widthSize = View.MeasureSpec.getSize(widthSpec)
+            val heightSize = View.MeasureSpec.getSize(heightSpec)
 
 
-        var width = 0
-        var height = 0
-        for (i in 0 until itemCount) {
-            measureScrapChild(
-                recycler, i,
-                View.MeasureSpec.makeMeasureSpec(i, View.MeasureSpec.UNSPECIFIED),
-                View.MeasureSpec.makeMeasureSpec(i, View.MeasureSpec.UNSPECIFIED),
-                mMeasuredDimension
-            )
+            var width = 0
+            var height = 0
+            for (i in 0 until itemCount) {
+                measureScrapChild(
+                    recycler, i,
+                    View.MeasureSpec.makeMeasureSpec(i, View.MeasureSpec.UNSPECIFIED),
+                    View.MeasureSpec.makeMeasureSpec(i, View.MeasureSpec.UNSPECIFIED),
+                    mMeasuredDimension
+                )
 
-            if (orientation == LinearLayoutManager.HORIZONTAL) {
-                width = width + mMeasuredDimension[0]
-                if (i == 0) {
-                    height = mMeasuredDimension[1]
-                }
-            } else {
-                height = height + mMeasuredDimension[1]
-                if (i == 0) {
-                    width = mMeasuredDimension[0]
+                if (orientation == LinearLayoutManager.HORIZONTAL) {
+                    width = width + mMeasuredDimension[0]
+                    if (i == 0) {
+                        height = mMeasuredDimension[1]
+                    }
+                } else {
+                    height = height + mMeasuredDimension[1]
+                    if (i == 0) {
+                        width = mMeasuredDimension[0]
+                    }
                 }
             }
-        }
-        when (widthMode) {
-            View.MeasureSpec.EXACTLY -> width = widthSize + dividerHeight
-        }
+            when (widthMode) {
+                View.MeasureSpec.EXACTLY -> width = widthSize + dividerHeight
+            }
 
-        when (heightMode) {
-            View.MeasureSpec.EXACTLY -> height = heightSize + dividerHeight
-        }
+            when (heightMode) {
+                View.MeasureSpec.EXACTLY -> height = heightSize + dividerHeight
+            }
 
-        setMeasuredDimension(width, height)
+            setMeasuredDimension(width, height)
+        } else {
+            super.onMeasure(recycler, state, widthSpec, heightSpec)
+        }
     }
 
     private fun measureScrapChild(

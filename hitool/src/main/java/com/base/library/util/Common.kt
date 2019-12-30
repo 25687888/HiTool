@@ -86,8 +86,9 @@ fun getFromAssets(context: Context, fileName: String): String {
  * false没有重复
  */
 private var mLastClickTime: Long = 0
-private const val MIN_CLICK_DELAY_TIME = 500
-fun isFast(): Boolean {
+private var MIN_CLICK_DELAY_TIME = 500
+fun isFast(delayTime: Int = 500): Boolean {
+    MIN_CLICK_DELAY_TIME = delayTime
     val currentTime = System.currentTimeMillis() // 当前时间
     val time = currentTime - mLastClickTime // 两次时间差
     if (time in 1 until MIN_CLICK_DELAY_TIME) return true

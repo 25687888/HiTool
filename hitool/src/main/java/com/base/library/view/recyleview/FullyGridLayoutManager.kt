@@ -33,50 +33,55 @@ class FullyGridLayoutManager : GridLayoutManager {
         recycler: RecyclerView.Recycler, state: RecyclerView.State, widthSpec: Int,
         heightSpec: Int
     ) {
-        val widthMode = View.MeasureSpec.getMode(widthSpec)
-        val heightMode = View.MeasureSpec.getMode(heightSpec)
-        val widthSize = View.MeasureSpec.getSize(widthSpec)
-        val heightSize = View.MeasureSpec.getSize(heightSpec)
+        val count = state.itemCount
+        if (count > 0) {
+            val widthMode = View.MeasureSpec.getMode(widthSpec)
+            val heightMode = View.MeasureSpec.getMode(heightSpec)
+            val widthSize = View.MeasureSpec.getSize(widthSpec)
+            val heightSize = View.MeasureSpec.getSize(heightSpec)
 
-        var width = 0
-        var height = 0
-        val count = itemCount
-        val span = spanCount
-        for (i in 0 until count) {
-            measureScrapChild(
-                recycler, i,
-                View.MeasureSpec.makeMeasureSpec(i, View.MeasureSpec.UNSPECIFIED),
-                View.MeasureSpec.makeMeasureSpec(i, View.MeasureSpec.UNSPECIFIED),
-                mMeasuredDimension
-            )
+            var width = 0
+            var height = 0
+            val count = itemCount
+            val span = spanCount
+            for (i in 0 until count) {
+                measureScrapChild(
+                    recycler, i,
+                    View.MeasureSpec.makeMeasureSpec(i, View.MeasureSpec.UNSPECIFIED),
+                    View.MeasureSpec.makeMeasureSpec(i, View.MeasureSpec.UNSPECIFIED),
+                    mMeasuredDimension
+                )
 
-            if (orientation == LinearLayoutManager.HORIZONTAL) {
-                if (i % span == 0) {
-                    width = width + mMeasuredDimension[0]
-                }
-                if (i == 0) {
-                    height = mMeasuredDimension[1]
-                }
-            } else {
-                if (i % span == 0) {
-                    height = height + mMeasuredDimension[1]
-                }
-                if (i == 0) {
-                    width = mMeasuredDimension[0]
+                if (orientation == LinearLayoutManager.HORIZONTAL) {
+                    if (i % span == 0) {
+                        width = width + mMeasuredDimension[0]
+                    }
+                    if (i == 0) {
+                        height = mMeasuredDimension[1]
+                    }
+                } else {
+                    if (i % span == 0) {
+                        height = height + mMeasuredDimension[1]
+                    }
+                    if (i == 0) {
+                        width = mMeasuredDimension[0]
+                    }
                 }
             }
-        }
 
-        when (widthMode) {
-            View.MeasureSpec.EXACTLY -> width = widthSize
-        }
+            when (widthMode) {
+                View.MeasureSpec.EXACTLY -> width = widthSize
+            }
 
-        when (heightMode) {
-            View.MeasureSpec.EXACTLY -> height = heightSize
+            when (heightMode) {
+                View.MeasureSpec.EXACTLY -> height = heightSize
+            }
+            mheight = height
+            mwidth = width
+            setMeasuredDimension(width, height)
+        } else {
+            super.onMeasure(recycler, state, widthSpec, heightSpec)
         }
-        mheight = height
-        mwidth = width
-        setMeasuredDimension(width, height)
     }
 
     private fun measureScrapChild(

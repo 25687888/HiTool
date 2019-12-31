@@ -6,8 +6,10 @@ import com.base.library.base.BMvpActivity
 import com.base.library.mvp.BPresenter
 import com.sendinfo.tool.tools.EventBuslUtils
 import com.base.library.util.SoundPoolTool
+import com.base.library.util.SpeechTool
 import com.base.library.view.sweetdialog.BSweetAlertDialog
 import com.sendinfo.tool.R
+import com.sendinfo.tool.entitys.other.FilePath
 import kotlinx.android.synthetic.main.activity_base.*
 import org.greenrobot.eventbus.Subscribe
 
@@ -17,6 +19,8 @@ import org.greenrobot.eventbus.Subscribe
 abstract class BActivity<T : BPresenter> : BMvpActivity<T>() {
 
     val soundPoolTool: SoundPoolTool by lazy { SoundPoolTool().apply { lifecycle.addObserver(this) } }
+
+    val speechTool: SpeechTool by lazy { SpeechTool(getContext(),FilePath).apply { lifecycle.addObserver(this) } }
 
     abstract fun setContentView(): Int
 

@@ -9,6 +9,7 @@ import android.os.Vibrator
 import androidx.lifecycle.LifecycleOwner
 import com.base.library.interfaces.MyLifecycleObserver
 import com.blankj.utilcode.util.Utils
+import java.io.File
 
 /**
  * 短音频 + 震动
@@ -69,6 +70,15 @@ class SoundPoolTool : MyLifecycleObserver {
      */
     fun startPlayVideo(resId: Int) {
         val load = mSoundPool.load(Utils.getApp(), resId, DEFAULT_PRIORITY)
+        mSoundPool.setOnLoadCompleteListener { soundPool, sampleId, status ->
+            mSoundPool.play(load, LEFT_VOLUME.toFloat(), RIGHT_VOLUME.toFloat(), DEFAULT_PRIORITY, LOOP, RATE)
+        }
+    }
+    /**
+     * videoPath 音频的文件路径
+     */
+    fun startPlayVideo(videoPath:String) {
+        val load = mSoundPool.load(videoPath, DEFAULT_PRIORITY)
         mSoundPool.setOnLoadCompleteListener { soundPool, sampleId, status ->
             mSoundPool.play(load, LEFT_VOLUME.toFloat(), RIGHT_VOLUME.toFloat(), DEFAULT_PRIORITY, LOOP, RATE)
         }

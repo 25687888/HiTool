@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat
 import com.base.library.mvp.BPresenter
 import com.base.library.mvp.BasePresenter
 import com.base.library.mvp.BaseView
+import com.base.library.util.isFast
 import com.base.library.util.setThreeClick
 import com.base.library.util.webview.WebViewTool
 import com.sendinfo.tool.base.BActivity
@@ -53,7 +54,7 @@ class WebMvpActivity : BActivity<BPresenter>(), BaseView {
                 LogUtils.d(permissionsDeniedForever, permissionsDenied)
             }
         }).request()
-
+        other("测试","Test","I")
     }
 
     override fun initData() {

@@ -17,7 +17,7 @@ import org.greenrobot.eventbus.Subscribe
  */
 abstract class BActivity<T : BPresenter> : BMvpActivity<T>() {
 
-    var soundPoolUtils: SoundPoolTool? = null//语音播放
+    var soundPoolTool: SoundPoolTool? = null//语音播放
 
     var speechTool: SpeechTool? = null//语音合成
 

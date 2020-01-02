@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.b_titlebar.*
  * 沉浸式BaseActivity封装
  */
 abstract class BImmerActivity<T : BPresenter> : BMvpActivity<T>() {
-    var soundPoolUtils: SoundPoolTool? = null//语音播放
+    var soundPoolTool: SoundPoolTool? = null//语音播放
 
     var speechTool: SpeechTool? = null//语音合成
 
@@ -36,7 +36,7 @@ abstract class BImmerActivity<T : BPresenter> : BMvpActivity<T>() {
      */
     override fun initContentView() {
         speechTool = SpeechTool(application, FilePath).apply { lifecycle.addObserver(this) } //语音文字合成
-        soundPoolUtils = SoundPoolTool().apply { lifecycle.addObserver(this) }////语音播放
+        soundPoolTool = SoundPoolTool().apply { lifecycle.addObserver(this) }////语音播放
         setContentView(R.layout.activity_base)
         ImmersionBar.with(this).titleBar(bTitlebar).init() // 沉浸式
         val contentView = LayoutInflater.from(this).inflate(setContentView(), fl, false)

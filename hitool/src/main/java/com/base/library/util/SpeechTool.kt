@@ -1,4 +1,4 @@
-package com.base.library.util
+package com.sendinfo.standard.tools
 
 import android.content.Context
 import android.media.AudioManager
@@ -25,7 +25,7 @@ import java.util.Locale
  * @param filePath 音频文件缓存路径
  * @param context 上下文对象
  */
-class SpeechTool(var context: Context, var filePath: String) : TextToSpeech.OnInitListener, MyLifecycleObserver {
+class SpeechTool(var context: Context, var filePath: String) : MyLifecycleObserver {
     private lateinit var owner: LifecycleOwner
     private var mSoundPool: SoundPool
     private val MAX_STREAMS = 2
@@ -35,6 +35,7 @@ class SpeechTool(var context: Context, var filePath: String) : TextToSpeech.OnIn
     private val RIGHT_VOLUME = 1
     private val LOOP = 0
     private val RATE = 1.0f
+    private var textToSpeech: TextToSpeech? = null
 
     override fun onCreate(owner: LifecycleOwner) {
         this.owner = owner
@@ -50,26 +51,22 @@ class SpeechTool(var context: Context, var filePath: String) : TextToSpeech.OnIn
         release()
     }
 
-    private val textToSpeech: TextToSpeech?
-
     init {
-        textToSpeech = TextToSpeech(context, this)
+        textToSpeech = TextToSpeech(context) {
+            if (it == TextToSpeech.SUCCESS) {
+                val result1 = textToSpeech?.setLanguage(Locale.ENGLISH)
+                val result2 = textToSpeech?.setLanguage(Locale.CHINESE)
+                if (result1 == TextToSpeech.LANG_MISSING_DATA || result1 == TextToSpeech.LANG_NOT_SUPPORTED || result2 == TextToSpeech.LANG_MISSING_DATA || result2 == TextToSpeech.LANG_NOT_SUPPORTED) {
+                    LogUtils.i("HJ", "SpeechUtils 初始化失败")
+                } else {
+                    LogUtils.i("HJ", "SpeechUtils 初始化成功")
+                }
+            }
+        }
         mSoundPool = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             SoundPool.Builder().setMaxStreams(MAX_STREAMS).build()
         } else {
             SoundPool(MAX_STREAMS, AudioManager.STREAM_MUSIC, DEFAULT_QUALITY)
-        }
-    }
-
-    override fun onInit(status: Int) {
-        if (status == TextToSpeech.SUCCESS) {
-            val result1 = textToSpeech?.setLanguage(Locale.ENGLISH)
-            val result2 = textToSpeech?.setLanguage(Locale.CHINESE)
-            if (result1 == TextToSpeech.LANG_MISSING_DATA || result1 == TextToSpeech.LANG_NOT_SUPPORTED || result2 == TextToSpeech.LANG_MISSING_DATA || result2 == TextToSpeech.LANG_NOT_SUPPORTED) {
-                LogUtils.i("HJ", "SpeechUtils 初始化失败")
-            } else {
-                LogUtils.i("HJ", "SpeechUtils 初始化成功")
-            }
         }
     }
 
@@ -108,21 +105,24 @@ class SpeechTool(var context: Context, var filePath: String) : TextToSpeech.OnIn
             }
     }
 
-    fun speak(speeckText: String) {
+    fun speak(speeckText: String, isCache: Boolean = false) {
         stop()
-        val file = File("$filePath${EncryptUtils.encryptMD5ToString(speeckText)}.wav")
-        if (file.exists()) {
-            val playSucess = startPlayVideo(file.path)
-            if (!playSucess) textToSpeech?.speak(speeckText, TextToSpeech.QUEUE_FLUSH, null)
+        if (isCache) {
+            val file = File("${filePath}voices/${EncryptUtils.encryptMD5ToString(speeckText)}.wav")
+            if (file.exists()) {
+                startPlayVideo(file.path)
+            } else {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) makeSound(speeckText)
+                textToSpeech?.speak(speeckText, TextToSpeech.QUEUE_FLUSH, null)
+            }
         } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) makeSound(speeckText)
             textToSpeech?.speak(speeckText, TextToSpeech.QUEUE_FLUSH, null)
         }
     }
 
     private fun stop() {
         try {
-            if (textToSpeech != null && textToSpeech.isSpeaking) textToSpeech.stop()
+            textToSpeech?.stop()
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
@@ -134,8 +134,8 @@ class SpeechTool(var context: Context, var filePath: String) : TextToSpeech.OnIn
     private fun release() {
         try {
             if (textToSpeech != null) {
-                textToSpeech.stop()
-                textToSpeech.shutdown()
+                textToSpeech?.stop()
+                textToSpeech?.shutdown()
             }
             mSoundPool.release()
         } catch (ex: Exception) {

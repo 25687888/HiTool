@@ -7,7 +7,9 @@ import com.base.library.mvp.BPresenter
 import com.base.library.util.SoundPoolTool
 import com.base.library.view.sweetdialog.BSweetAlertDialog
 import com.gyf.immersionbar.ImmersionBar
+import com.sendinfo.standard.tools.SpeechTool
 import com.sendinfo.tool.R
+import com.sendinfo.tool.entitys.other.FilePath
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.b_titlebar.*
 
@@ -15,7 +17,9 @@ import kotlinx.android.synthetic.main.b_titlebar.*
  * 沉浸式BaseActivity封装
  */
 abstract class BImmerActivity<T : BPresenter> : BMvpActivity<T>() {
-    val soundPoolTool: SoundPoolTool by lazy { SoundPoolTool().apply { lifecycle.addObserver(this) } }
+    var soundPoolUtils: SoundPoolTool? = null//语音播放
+
+    var speechTool: SpeechTool? = null//语音合成
 
     abstract fun setContentView(): Int
 
@@ -31,6 +35,8 @@ abstract class BImmerActivity<T : BPresenter> : BMvpActivity<T>() {
      *初始化页面ID及沉浸式， 页面初始化时调用
      */
     override fun initContentView() {
+        speechTool = SpeechTool(application, FilePath).apply { lifecycle.addObserver(this) } //语音文字合成
+        soundPoolUtils = SoundPoolTool().apply { lifecycle.addObserver(this) }////语音播放
         setContentView(R.layout.activity_base)
         ImmersionBar.with(this).titleBar(bTitlebar).init() // 沉浸式
         val contentView = LayoutInflater.from(this).inflate(setContentView(), fl, false)
@@ -41,7 +47,7 @@ abstract class BImmerActivity<T : BPresenter> : BMvpActivity<T>() {
     /**
      * 页面初始化时调用
      */
-    open fun initView(){
+    open fun initView() {
 
     }
 

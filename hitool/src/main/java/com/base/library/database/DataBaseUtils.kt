@@ -13,7 +13,7 @@ object DataBaseUtils {
     private val dataBase = Room.databaseBuilder(
         Utils.getApp(),
         DataBase::class.java,
-        "${SDCardUtils.getSDCardInfo()[0].path}/sendInfo/logNew.db"
+        "${SDCardUtils.getSDCardInfo()[0].path}/sendInfo/db/log.db"
     ).setJournalMode(RoomDatabase.JournalMode.TRUNCATE) // 日志模式,立即写入数据库
 //        .allowMainThreadQueries() // todo 允许主线程查询,仅用于测试
         .build()

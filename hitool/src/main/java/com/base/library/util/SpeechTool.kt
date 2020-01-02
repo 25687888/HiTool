@@ -1,4 +1,4 @@
-package com.sendinfo.standard.tools
+package com.base.library.util
 
 import android.content.Context
 import android.media.AudioManager

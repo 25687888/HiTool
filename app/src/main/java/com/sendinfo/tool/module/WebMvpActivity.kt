@@ -9,6 +9,8 @@ import com.base.library.mvp.BasePresenter
 import com.base.library.mvp.BaseView
 import com.base.library.util.isFast
 import com.base.library.util.setThreeClick
+import com.base.library.util.transferfile.entitys.FileTransfer
+import com.base.library.util.transferfile.presenter.DownloadTool
 import com.base.library.util.webview.WebViewTool
 import com.sendinfo.tool.base.BActivity
 import kotlinx.android.synthetic.main.activity_web.*
@@ -22,6 +24,7 @@ import com.sendinfo.tool.tools.getWebUrl
 import com.sendinfo.tool.tools.putWebUrl
 import com.sendinfo.tool.views.dialogs.InputDialog
 import com.blankj.utilcode.util.PermissionUtils.FullCallback
+import com.sendinfo.tool.entitys.other.FilePath
 import com.sendinfo.tool.tools.JsBridge
 import com.sendinfo.tool.tools.LocationTool
 
@@ -43,7 +46,10 @@ class WebMvpActivity : BActivity<BPresenter>(), BaseView {
             PermissionConstants.LOCATION
         ).callback(object : FullCallback {
             override fun onGranted(permissionsGranted: List<String>) {
-                if (permissionsGranted.contains(ACCESS_COARSE_LOCATION) || permissionsGranted.contains(ACCESS_FINE_LOCATION)) {
+                if (permissionsGranted.contains(ACCESS_COARSE_LOCATION) || permissionsGranted.contains(
+                        ACCESS_FINE_LOCATION
+                    )
+                ) {
                     locationTool.getLocation {
                         jsBridge.locationStr = "${it.latitude},${it.longitude},${it.address}"
                     }
@@ -54,12 +60,12 @@ class WebMvpActivity : BActivity<BPresenter>(), BaseView {
                 LogUtils.d(permissionsDeniedForever, permissionsDenied)
             }
         }).request()
-        other("测试","Test","I")
+        other("测试", "Test", "I")
     }
 
     override fun initData() {
         super.initData()
-        viewChange?.setThreeClick { showInputDialog()  }
+        viewChange?.setThreeClick { showInputDialog() }
         webView.setOnLongClickListener { true }
         webView.addJavascriptInterface(jsBridge, "jsBridge")//js映射
         webProgress.setColor(ContextCompat.getColor(this, R.color.colorAccent))

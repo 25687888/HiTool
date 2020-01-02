@@ -1,11 +1,11 @@
-package com.sendinfo.tool.template.ui
+package com.sendinfo.tool.module.template.ui
 
 import com.base.library.http.HttpDto
 import com.base.library.util.JsonTool
 import com.base.library.view.other.RxToast
 import com.base.library.view.sweetdialog.BSweetAlertDialog
-import com.sendinfo.tool.template.contract.DemoContract
-import com.sendinfo.tool.template.presenter.DemoPresenter
+import com.sendinfo.tool.module.template.contract.DemoContract
+import com.sendinfo.tool.module.template.presenter.DemoPresenter
 import com.sendinfo.tool.R
 import com.sendinfo.tool.base.BActivity
 import com.sendinfo.tool.entitys.event.EventBean

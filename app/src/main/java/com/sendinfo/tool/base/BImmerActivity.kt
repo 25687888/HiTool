@@ -7,7 +7,7 @@ import com.base.library.mvp.BPresenter
 import com.base.library.util.SoundPoolTool
 import com.base.library.view.sweetdialog.BSweetAlertDialog
 import com.gyf.immersionbar.ImmersionBar
-import com.sendinfo.standard.tools.SpeechTool
+import com.base.library.util.SpeechTool
 import com.sendinfo.tool.R
 import com.sendinfo.tool.entitys.other.FilePath
 import kotlinx.android.synthetic.main.activity_base.*

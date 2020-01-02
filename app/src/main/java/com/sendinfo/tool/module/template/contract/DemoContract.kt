@@ -1,4 +1,4 @@
-package com.sendinfo.tool.template.contract
+package com.sendinfo.tool.module.template.contract
 
 import com.base.library.mvp.BPresenter
 import com.base.library.mvp.BView

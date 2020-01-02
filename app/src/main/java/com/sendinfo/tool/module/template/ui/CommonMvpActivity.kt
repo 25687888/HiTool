@@ -1,4 +1,4 @@
-package com.sendinfo.tool.template.ui
+package com.sendinfo.tool.module.template.ui
 
 import com.base.library.mvp.BPresenter
 import com.base.library.mvp.BasePresenter

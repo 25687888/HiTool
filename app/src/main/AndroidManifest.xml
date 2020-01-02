@@ -31,7 +31,7 @@
             <!--<category android:name="android.intent.category.LAUNCHER"/>-->
             <!--</intent-filter>-->
         </activity>
-        <activity android:name=".template.ui.DemoMvpActivity"/>
+        <activity android:name="com.sendinfo.tool.module.template.ui.DemoMvpActivity"/>
         <activity android:name=".module.WebMvpActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

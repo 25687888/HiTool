@@ -8,7 +8,7 @@ import com.base.library.view.other.RxToast
 import com.base.library.view.sweetdialog.BSweetAlertDialog
 import com.sendinfo.tool.R
 import com.sendinfo.tool.base.BActivity
-import com.sendinfo.tool.template.ui.DemoMvpActivity
+import com.sendinfo.tool.module.template.ui.DemoMvpActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.b_titlebar.*
 import org.jetbrains.anko.intentFor

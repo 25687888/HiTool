@@ -1,10 +1,10 @@
-package com.sendinfo.tool.template.presenter
+package com.sendinfo.tool.module.template.presenter
 
 import android.text.TextUtils
 import com.sendinfo.tool.entitys.response.BaseResponse
 import com.base.library.http.HttpDto
 import com.base.library.mvp.BPresenterImpl
-import com.sendinfo.tool.template.contract.DemoContract
+import com.sendinfo.tool.module.template.contract.DemoContract
 
 /**
  * 作用: 使用案例,自己定义Presenter

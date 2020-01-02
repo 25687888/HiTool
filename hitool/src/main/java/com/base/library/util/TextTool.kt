@@ -1,5 +1,4 @@
-package com.sendinfo.standard.tools
-
+package com.base.library.util
 
 import android.graphics.Bitmap
 import android.graphics.BlurMaskFilter

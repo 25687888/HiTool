@@ -34,6 +34,7 @@ class UpLoadTool : BTransfer {
 
                 override fun onProgress(progress: Progress) {
                     if (progress.status == Progress.ERROR) return
+                    if (progress.status == Progress.FINISH) return
                     fileTransfer.process = progress
                     listener.invoke(fileTransfer)
                 }
@@ -43,14 +44,13 @@ class UpLoadTool : BTransfer {
                 }
 
                 override fun onFinish(file: String, progress: Progress) {
-                    LogUtils.i("DownloadTool onFinish $progress")
                     fileTransfer.process = progress
                     listener.invoke(fileTransfer)
                     OkUpload.getInstance().getTask(progress.tag).remove()
                 }
 
                 override fun onRemove(progress: Progress) {
-                    LogUtils.i("DownloadTool onRemove $progress")
+                    LogUtils.i("UpLoadTool onRemove $progress")
                 }
 
             }).start()

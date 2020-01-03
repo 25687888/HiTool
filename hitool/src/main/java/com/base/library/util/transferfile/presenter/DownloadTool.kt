@@ -34,6 +34,7 @@ class DownloadTool(var folder: String) : BTransfer {
 
                 override fun onProgress(progress: Progress) {
                     if (progress.status == Progress.ERROR) return
+                    if (progress.status == Progress.FINISH) return
                     fileTransfer.process = progress
                     listener.invoke(fileTransfer)
                 }
@@ -43,7 +44,6 @@ class DownloadTool(var folder: String) : BTransfer {
                 }
 
                 override fun onFinish(file: File, progress: Progress) {
-                    LogUtils.i("DownloadTool onFinish  ${file.path}")
                     fileTransfer.process = progress
                     listener.invoke(fileTransfer)
                     OkDownload.getInstance().getTask(progress.tag).remove(false)

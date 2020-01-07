@@ -9,11 +9,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.base.library.mvp.BPresenter
 import com.base.library.mvp.BView
-import com.base.library.util.roomInsertJournalRecord
 import com.base.library.view.sweetdialog.BSweetAlertDialog
 import com.base.library.view.sweetdialog.SweetAlertDialog
-import com.uber.autodispose.AutoDispose
-import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
 
 /**
  * MVP Base Fragment封装
@@ -152,15 +149,4 @@ abstract class BMvpFragment<T : BPresenter> : Fragment(), BView {
         sweetAlertDialog?.dismiss()
         activity?.finish()
     }
-
-    override fun other(content: String, behavior: String, level: String) {
-        roomInsertJournalRecord(content, behavior, level)
-            .`as`(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(this)))
-            .subscribe({
-                //                LogUtils.d("插入的主键是:$it")
-            }, {
-                //                LogUtils.e("删除:$it.localizedMessage")
-            })
-    }
-
 }

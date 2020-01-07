@@ -3,15 +3,8 @@ package com.base.library.mvp
 import com.base.library.http.HttpDto
 import com.blankj.utilcode.util.LogUtils
 import com.lzy.okgo.model.Response
-import io.reactivex.Observer
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 
 class BModelImpl : BModel {
-
-    private var compositeDisposable: CompositeDisposable? = null
 
     override fun getData(callback: BRequestCallback, http: HttpDto) {
         val requestBody = http.print()
@@ -34,39 +27,6 @@ class BModelImpl : BModel {
         })
     }
 
-    override fun getOkGoRx(callback: BRequestCallback, http: HttpDto) {
-        http.getOkGoRx()
-            .subscribeOn(Schedulers.io())
-            .doOnSubscribe { if (!http.silence) callback.beforeRequest() }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : Observer<String> {
-                override fun onSubscribe(d: Disposable) {
-                    addDispose(d)
-                }
-
-                override fun onComplete() {
-                    callback.requestComplete()
-                }
-
-                override fun onNext(s: String) {
-                    callback.requestSuccess(s, http)
-                }
-
-                override fun onError(e: Throwable) {
-                    callback.requestError(e, http)
-                }
-            })
-    }
-
-    override fun addDispose(disposable: Disposable) {
-        compositeDisposable ?: let { compositeDisposable = CompositeDisposable() }
-        compositeDisposable?.add(disposable)
-    }
-
-    override fun closeAllDispose() {
-        compositeDisposable?.dispose()
-    }
-
     private fun printLog(url: String, method: String, data: String) {
         LogUtils.i(
             StringBuilder()
@@ -77,5 +37,4 @@ class BModelImpl : BModel {
         )
         LogUtils.json(data)
     }
-
 }

@@ -4,19 +4,26 @@ import android.annotation.SuppressLint
 import androidx.multidex.MultiDexApplication
 import com.base.library.util.CrashTool
 import com.base.library.util.SpTool
-import com.base.library.util.roomInsertJournalRecord
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.Utils
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.https.HttpsUtils
 import okhttp3.OkHttpClient
 import android.content.pm.ApplicationInfo
+import com.base.library.database.DataBaseUtils
+import com.base.library.database.entity.JournalRecord
+import com.base.library.util.tryCatch
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 
 /**
  * 作用: 程序的入口
  */
 open class BApplication : MultiDexApplication() {
+    private val presenterScope: CoroutineScope by lazy { CoroutineScope(Dispatchers.IO + Job()) }
     var isDebug = false
     override fun onCreate() {
         super.onCreate()
@@ -39,7 +46,7 @@ open class BApplication : MultiDexApplication() {
             override fun handlerException(thread: Thread, throwable: Throwable, info: String) {
                 try {
                     LogUtils.e(info)
-                    roomInsertJournalRecord(info, "异常-全局", "E").subscribe({}, {})
+                    other(info, "异常-全局", "E")
                 } catch (e: Throwable) {
                 }
             }
@@ -77,5 +84,15 @@ open class BApplication : MultiDexApplication() {
             .setBorderSwitch(isDebug)//边框开关
             .stackDeep = 1 //栈深度
     }
-
+    private fun other(content: String, behavior: String, level: String) {
+        tryCatch({
+            presenterScope.launch {
+                val journalRecord = JournalRecord()
+                journalRecord.content = content
+                journalRecord.behavior = behavior
+                journalRecord.level = level
+                DataBaseUtils.getJournalRecordDao().insertCts(journalRecord)
+            }
+        })
+    }
 }

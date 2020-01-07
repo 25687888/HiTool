@@ -5,28 +5,8 @@ import android.content.res.Resources
 import android.os.SystemClock
 import android.util.TypedValue
 import android.view.View
-import com.base.library.database.DataBaseUtils
-import com.base.library.database.entity.JournalRecord
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import java.io.BufferedReader
 import java.io.InputStreamReader
-
-/**
- *  @desc:工具类,扩展函数及常用的内联函数
- */
-//添加日志记录到数据库
-fun roomInsertJournalRecord(content: String, behavior: String, level: String): Single<Long> = DataBaseUtils
-    .getJournalRecordDao()
-    .insertRxCompletable(
-        JournalRecord().apply {
-            this.content = content
-            this.behavior = behavior
-            this.level = level
-        })
-    .subscribeOn(Schedulers.newThread())
-    .observeOn(AndroidSchedulers.mainThread())
 
 val Float.dp: Float
     get() = TypedValue.applyDimension(

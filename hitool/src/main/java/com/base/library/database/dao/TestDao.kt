@@ -118,4 +118,19 @@ interface TestDao {
     @Delete
     fun deleteAll5(test: MutableList<Test>): Single<Int>
 
+
+    /**
+     * ++++++++++++++++++++++++++++ 结合coroutines ++++++++++++++++++++++++++++
+     */
+    @Insert
+    suspend fun insertTestC(test: Test)
+
+    @Delete
+    suspend fun deleteTestC(test: Test)
+
+    @Update
+    suspend fun updateTestC(test: Test)
+
+    @Query("select * from Test order by id desc") // 降序
+    suspend fun getTestAllC(): MutableList<Test>
 }

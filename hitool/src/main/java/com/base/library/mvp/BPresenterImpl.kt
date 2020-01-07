@@ -3,24 +3,26 @@ package com.base.library.mvp
 import android.annotation.SuppressLint
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import com.base.library.database.DataBaseUtils
+import com.base.library.database.entity.JournalRecord
 import com.base.library.http.HttpDto
 import com.base.library.util.JsonTool
+import com.base.library.util.tryCatch
 import com.base.library.view.sweetdialog.BSweetAlertDialog
 import com.blankj.utilcode.util.LogUtils
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.exception.HttpException
 import com.lzy.okgo.exception.StorageException
-import com.uber.autodispose.AutoDispose
-import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.*
+import java.lang.ref.WeakReference
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
-open class BPresenterImpl<T : BView>(var mView: T) : BPresenter, BRequestCallback {
-
+open class BPresenterImpl<T : BView>(view: T) : BRequestCallback {
+    val mView: T? get() = mViewRef.get()
+    private var mViewRef = WeakReference(view)//View接口类型的弱引用
+    val presenterScope: CoroutineScope by lazy { CoroutineScope(Dispatchers.IO + Job()) }
     private val model: BModel = BModelImpl()
     open var lifecycleOwner: LifecycleOwner? = null
 
@@ -33,7 +35,8 @@ open class BPresenterImpl<T : BView>(var mView: T) : BPresenter, BRequestCallbac
 
     override fun onDestroy(owner: LifecycleOwner) {
         OkGo.getInstance().cancelTag(this)
-        model.closeAllDispose()
+        presenterScope.cancel()
+        mViewRef.clear()
     }
 
     override fun onLifecycleChanged(owner: LifecycleOwner, event: Lifecycle.Event) {
@@ -42,10 +45,7 @@ open class BPresenterImpl<T : BView>(var mView: T) : BPresenter, BRequestCallbac
     override fun getData(http: HttpDto) {
         mView?.let {
             http.tag = this
-            when (http.httpMode) {
-                HttpDto.getOkGo -> model.getData(this, http)
-                HttpDto.getOkGoRx -> model.getOkGoRx(this, http)
-            }
+            model.getData(this, http)
         }
     }
 
@@ -90,7 +90,15 @@ open class BPresenterImpl<T : BView>(var mView: T) : BPresenter, BRequestCallbac
     }
 
     override fun other(content: String, behavior: String, level: String) {
-        mView?.other(content, behavior, level)
+        tryCatch({
+            presenterScope.launch {
+                val journalRecord = JournalRecord()
+                journalRecord.content = content
+                journalRecord.behavior = behavior
+                journalRecord.level = level
+                DataBaseUtils.getJournalRecordDao().insertCts(journalRecord)
+            }
+        })
     }
 
     /**
@@ -101,12 +109,13 @@ open class BPresenterImpl<T : BView>(var mView: T) : BPresenter, BRequestCallbac
         crossinline successBlock: (T) -> Unit,
         crossinline errorBlock: (Throwable) -> Unit? = { t: Throwable -> t.printStackTrace() }
     ) {
-        Observable
-            .just(body)
-            .subscribeOn(Schedulers.io())
-            .map { JsonTool.getObject(it, T::class.java) }
-            .observeOn(AndroidSchedulers.mainThread())
-            .`as`(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(lifecycleOwner)))
-            .subscribe({ successBlock(it) }, { errorBlock(it) })
+        tryCatch({
+            presenterScope.launch {
+                val obj = JsonTool.getObject(body, T::class.java)
+                withContext(Dispatchers.Main) { successBlock.invoke(obj) }
+            }
+        }, {
+            errorBlock.invoke(it)
+        })
     }
 }

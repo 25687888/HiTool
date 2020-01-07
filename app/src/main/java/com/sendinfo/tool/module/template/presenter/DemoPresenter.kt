@@ -33,7 +33,7 @@ class DemoPresenter(view: DemoContract.View) : BPresenterImpl<DemoContract.View>
             }
             getData(bRequest)
         } else {
-            mView.loginError("身份证不能少于18位")
+            mView?.loginError("身份证不能少于18位")
         }
     }
 

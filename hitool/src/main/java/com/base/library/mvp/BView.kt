@@ -35,10 +35,4 @@ interface BView {
      * Activity获取当前this，Fragment获取getActivity
      */
     fun getContext(): Context
-
-    /**
-     * 可以用来保存日志
-     */
-    fun other(content: String, behavior: String, level: String)
-
 }

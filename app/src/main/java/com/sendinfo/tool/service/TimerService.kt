@@ -3,13 +3,13 @@ package com.sendinfo.tool.service
 import android.annotation.SuppressLint
 import android.app.Service
 import android.content.Intent
+import android.os.Handler
 import android.os.IBinder
-import android.text.TextUtils
 import com.base.library.database.DataBaseUtils
 import com.base.library.database.entity.JournalRecord
 import com.base.library.http.HttpDto
 import com.base.library.util.JsonTool
-import com.base.library.util.roomInsertJournalRecord
+import com.base.library.util.tryCatch
 import com.blankj.utilcode.constant.TimeConstants
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.TimeUtils
@@ -20,39 +20,46 @@ import com.sendinfo.tool.entitys.request.base.FormRequest
 import com.sendinfo.tool.entitys.request.UploadLog
 import com.sendinfo.tool.entitys.response.BaseResponse
 import com.sendinfo.tool.tools.Beat
-import com.sendinfo.tool.tools.getIp
 import com.sendinfo.tool.tools.getShebeiCode
 import com.sendinfo.tool.tools.logSave
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.*
 
 import java.util.ArrayList
-import java.util.Calendar
-import java.util.concurrent.TimeUnit
 
 /**
  * 后台定时服务：日志30分钟上传和清理一次、心跳60秒一次
  */
 class TimerService : Service() {
+    private val presenterScope: CoroutineScope by lazy { CoroutineScope(Dispatchers.Default + Job()) }
+    private var handlerLog: Handler? = Handler()
+    private var handlerBeat: Handler? = Handler()
+
+    override fun onCreate() {
+        super.onCreate()
+        handleLogs()//处理日志
+        handlerBeat()//心跳
+    }
+
+    private fun handleLogs() {
+        handlerLog?.removeCallbacksAndMessages(null)
+        handlerLog?.postDelayed({
+            uploadLog()
+            cleanLog()
+            handlerLog?.let { handleLogs() }
+        }, 30 * 60 * 1000)
+    }
 
     override fun onBind(intent: Intent): IBinder? {
         return null
     }
 
-    @SuppressLint("CheckResult")
-    override fun onCreate() {
-        super.onCreate()
-        Observable
-            .interval(30, TimeUnit.MINUTES).subscribe {
-                uploadLog()
-                cleanLog()
-            }
-        Observable
-            .interval(0, 60, TimeUnit.SECONDS)
-            .subscribe {
-                if (!TextUtils.isEmpty(getIp())) httpBeat()
-            }
+    override fun onDestroy() {
+        super.onDestroy()
+        presenterScope.cancel()
+        handlerLog?.removeCallbacksAndMessages(null)
+        handlerLog = null
+        handlerBeat?.removeCallbacksAndMessages(null)
+        handlerLog = null
     }
 
     /**
@@ -60,14 +67,13 @@ class TimerService : Service() {
      */
     @SuppressLint("CheckResult")
     private fun cleanLog() {
-        DataBaseUtils.getJournalRecordDao()
-            .deleteFormTime(TimeUtils.getString(TimeUtils.getNowString(), -3, TimeConstants.DAY))
-            .subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                LogUtils.d("删除了多少条:$it") //
-            }, {
-                LogUtils.e("删除: $it.localizedMessage")
-            })
+        tryCatch({
+            presenterScope.launch {
+                val timeStr = TimeUtils.getString(TimeUtils.getNowString(), -3, TimeConstants.DAY)
+                val i = DataBaseUtils.getJournalRecordDao().deleteFormTimeCts(timeStr)
+                LogUtils.d("删除了多少条:$i")
+            }
+        })
     }
 
     /**
@@ -75,35 +81,33 @@ class TimerService : Service() {
      */
     @SuppressLint("CheckResult")
     private fun uploadLog() {
-        DataBaseUtils.getJournalRecordDao()
-            .queryByTime(TimeUtils.getString(TimeUtils.getNowString(), -5, TimeConstants.MIN), TimeUtils.getNowString())
-            .subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                LogUtils.d("查询了多少条:${it.size}")
-                val logs = ArrayList<UploadLog>()
-                for (logMessage in it) {
-                    val log = UploadLog().apply {
-                        logTime = logMessage.time
-                        logContent = logMessage.content
-                        operatorCode = getShebeiCode()
-                        getLogLevel(logMessage)
+        val startTime = TimeUtils.getString(TimeUtils.getNowString(), -5, TimeConstants.MIN)
+        presenterScope.launch {
+            val logDB = DataBaseUtils.getJournalRecordDao().queryFormTimeCts(startTime, TimeUtils.getNowString())
+            val uploadLogs = ArrayList<UploadLog>()
+            for (logMessage in logDB) {
+                val log = UploadLog().apply {
+                    logTime = logMessage.time
+                    logContent = logMessage.content
+                    operatorCode = getShebeiCode()
+                    getLogLevel(logMessage)
+                }
+                uploadLogs.add(log)
+            }
+            if (uploadLogs.isNotEmpty()) {
+                val requestBody = BodyRequest().apply { dataInfo = JsonTool.getJsonString(uploadLogs) }
+                val httpDto = HttpDto(logSave).apply { bodyJson = JsonTool.getJsonString(requestBody) }
+                httpDto.getOkGo().execute(object : StringCallback() {
+                    override fun onSuccess(response: Response<String>?) {
+                        LogUtils.i("上传日志成功,${response?.code()}")
                     }
-                    logs.add(log)
-                }
-                if (logs.isNotEmpty()) {
-                    val requestBody = BodyRequest().apply { dataInfo = JsonTool.getJsonString(logs) }
-                    val httpDto = HttpDto(logSave).apply { bodyJson = JsonTool.getJsonString(requestBody) }
-                    httpDto.getOkGo().execute(object : StringCallback() {
-                        override fun onSuccess(response: Response<String>?) {
-                            LogUtils.i("上传日志成功,${response?.code()}")
-                        }
 
-                        override fun onError(response: Response<String>?) {
-                            LogUtils.i("上传日志失败,${response?.code()},${response?.message()}")
-                        }
-                    })
-                }
-            }, {})
+                    override fun onError(response: Response<String>?) {
+                        LogUtils.i("上传日志失败,${response?.code()},${response?.message()}")
+                    }
+                })
+            }
+        }
     }
 
     private fun UploadLog.getLogLevel(logMessage: JournalRecord) {
@@ -131,44 +135,32 @@ class TimerService : Service() {
         }
     }
 
-
-    /*
-    * from表单形式提示数据
-    * */
-    @SuppressLint("CheckResult")
-    private fun httpBeat() {
-        val form = FormRequest().apply { terminalCode = getShebeiCode() }
-        val bRequest = HttpDto(Beat).apply {
-            httpType = HttpDto.GET
-            params = JsonTool.getMapFromObj(form)
-        }
-        bRequest.print()
-        bRequest.getOkGoRx()
-            .subscribeOn(Schedulers.io())
-            .map {
-                val response = JsonTool.getObject(it, BaseResponse::class.java)
-                if (response.success) {
-                } else {
-                }
+    private fun handlerBeat() {
+        handlerBeat?.removeCallbacksAndMessages(null)
+        handlerBeat?.postDelayed({
+            val form = FormRequest().apply { terminalCode = getShebeiCode() }
+            val httpDto = HttpDto(Beat).apply {
+                httpType = HttpDto.GET
+                params = JsonTool.getMapFromObj(form)
             }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-            }, {
-                addLog("${it.message}", "${bRequest.url}异常-心跳")
+            httpDto.print()
+            httpDto.getOkGo().execute(object : StringCallback() {
+                override fun onSuccess(response: Response<String>?) {
+                    val body = response?.body() ?: ""
+                    val response = JsonTool.getObject(body, BaseResponse::class.java)
+                }
+
+                override fun onError(response: Response<String>?) {
+                    presenterScope.launch {
+                        val journalRecord = JournalRecord()
+                        journalRecord.content = response?.body() ?: ""
+                        journalRecord.behavior = "异常-心跳"
+                        journalRecord.level = "E"
+                        DataBaseUtils.getJournalRecordDao().insertCts(journalRecord)
+                    }
+                }
             })
-    }
-
-    @SuppressLint("CheckResult")
-    private fun addLog(message: String, behavior: String) {
-        roomInsertJournalRecord(message, behavior, "I").subscribe({ LogUtils.d("日志添加成功") }, { LogUtils.e("日志添加失败") })
-    }
-
-    /**
-     * 当前时间的前五分钟
-     */
-    private fun before(): Long {
-        val calendar = Calendar.getInstance()
-        calendar.add(Calendar.MINUTE, -5)
-        return calendar.time.time
+            handlerBeat?.let { handlerBeat() }
+        }, 60 * 1000)
     }
 }

@@ -1,4 +1,4 @@
-package com.base.library.util.transferfile.presenter
+package com.base.library.util.transferfile
 
 import com.base.library.util.transferfile.entitys.FileTransfer
 

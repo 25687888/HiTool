@@ -7,10 +7,7 @@ import androidx.core.content.ContextCompat
 import com.base.library.mvp.BPresenter
 import com.base.library.mvp.BasePresenter
 import com.base.library.mvp.BaseView
-import com.base.library.util.isFast
 import com.base.library.util.setThreeClick
-import com.base.library.util.transferfile.entitys.FileTransfer
-import com.base.library.util.transferfile.presenter.DownloadTool
 import com.base.library.util.webview.WebViewTool
 import com.sendinfo.tool.base.BActivity
 import kotlinx.android.synthetic.main.activity_web.*
@@ -24,7 +21,6 @@ import com.sendinfo.tool.tools.getWebUrl
 import com.sendinfo.tool.tools.putWebUrl
 import com.sendinfo.tool.views.dialogs.InputDialog
 import com.blankj.utilcode.util.PermissionUtils.FullCallback
-import com.sendinfo.tool.entitys.other.FilePath
 import com.sendinfo.tool.tools.JsBridge
 import com.sendinfo.tool.tools.LocationTool
 
@@ -60,7 +56,7 @@ class WebMvpActivity : BActivity<BPresenter>(), BaseView {
                 LogUtils.d(permissionsDeniedForever, permissionsDenied)
             }
         }).request()
-        other("测试", "Test", "I")
+        mPresenter?.other("测试", "Test", "I")
     }
 
     override fun initData() {

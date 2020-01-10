@@ -28,13 +28,6 @@ class BModelImpl : BModel {
     }
 
     private fun printLog(url: String, method: String, data: String) {
-        LogUtils.i(
-            StringBuilder()
-                .appendln("Response 地址 : $url")
-                .appendln("方法 : $method")
-                .appendln("返回数据如下 : ")
-                .toString()
-        )
-        LogUtils.json(data)
+        LogUtils.i("Response地址 : $url\n方法 : $method\n返回数据如下 :\n$data")
     }
 }

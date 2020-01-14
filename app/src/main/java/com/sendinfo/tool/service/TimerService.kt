@@ -151,13 +151,15 @@ class TimerService : Service() {
                 }
 
                 override fun onError(response: Response<String>?) {
-                    presenterScope.launch {
-                        val journalRecord = JournalRecord()
-                        journalRecord.content = response?.body() ?: ""
-                        journalRecord.behavior = "异常-心跳"
-                        journalRecord.level = "E"
-                        DataBaseUtils.getJournalRecordDao().insertCts(journalRecord)
-                    }
+                    tryCatch({
+                        presenterScope.launch {
+                            val journalRecord = JournalRecord()
+                            journalRecord.content = response?.body() ?: ""
+                            journalRecord.behavior = "异常-心跳"
+                            journalRecord.level = "E"
+                            DataBaseUtils.getJournalRecordDao().insertCts(journalRecord)
+                        }
+                    })
                 }
             })
             handlerBeat?.let { handlerBeat() }

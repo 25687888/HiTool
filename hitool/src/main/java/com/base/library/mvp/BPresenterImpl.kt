@@ -3,8 +3,8 @@ package com.base.library.mvp
 import android.annotation.SuppressLint
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
-import com.base.library.database.DataBaseUtils
-import com.base.library.database.entity.JournalRecord
+import com.base.library.db.LogDBManager
+import com.base.library.db.LogMessage
 import com.base.library.http.HttpDto
 import com.base.library.util.JsonTool
 import com.base.library.util.tryCatch
@@ -92,11 +92,7 @@ open class BPresenterImpl<T : BView>(view: T) : BRequestCallback {
     override fun other(content: String, behavior: String, level: String) {
         tryCatch({
             presenterScope.launch {
-                val journalRecord = JournalRecord()
-                journalRecord.content = content
-                journalRecord.behavior = behavior
-                journalRecord.level = level
-                DataBaseUtils.getJournalRecordDao().insertCts(journalRecord)
+                LogDBManager.add(LogMessage(content, behavior, level))
             }
         })
     }

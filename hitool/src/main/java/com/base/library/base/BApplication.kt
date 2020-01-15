@@ -10,8 +10,8 @@ import com.lzy.okgo.OkGo
 import com.lzy.okgo.https.HttpsUtils
 import okhttp3.OkHttpClient
 import android.content.pm.ApplicationInfo
-import com.base.library.database.DataBaseUtils
-import com.base.library.database.entity.JournalRecord
+import com.base.library.db.LogDBManager
+import com.base.library.db.LogMessage
 import com.base.library.util.tryCatch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -29,6 +29,7 @@ open class BApplication : MultiDexApplication() {
         super.onCreate()
         val startTime = System.currentTimeMillis()//获取开始时间
         isDebug = applicationInfo != null && applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
+        LogDBManager.init(this)//日志数据库初始化
         initAndroidUtilCode()
         initHttp()
         if (!isDebug) initCockroach()
@@ -84,14 +85,11 @@ open class BApplication : MultiDexApplication() {
             .setBorderSwitch(isDebug)//边框开关
             .stackDeep = 1 //栈深度
     }
+
     private fun other(content: String, behavior: String, level: String) {
         tryCatch({
             presenterScope.launch {
-                val journalRecord = JournalRecord()
-                journalRecord.content = content
-                journalRecord.behavior = behavior
-                journalRecord.level = level
-                DataBaseUtils.getJournalRecordDao().insertCts(journalRecord)
+                LogDBManager.add(LogMessage(content, behavior, level))
             }
         })
     }

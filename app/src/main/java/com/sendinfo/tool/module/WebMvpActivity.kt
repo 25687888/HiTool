@@ -2,6 +2,7 @@ package com.sendinfo.tool.module
 
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.content.Intent
 import android.view.View
 import androidx.core.content.ContextCompat
 import com.base.library.mvp.BPresenter
@@ -21,6 +22,7 @@ import com.sendinfo.tool.tools.getWebUrl
 import com.sendinfo.tool.tools.putWebUrl
 import com.sendinfo.tool.views.dialogs.InputDialog
 import com.blankj.utilcode.util.PermissionUtils.FullCallback
+import com.sendinfo.tool.service.TimerService
 import com.sendinfo.tool.tools.JsBridge
 import com.sendinfo.tool.tools.LocationTool
 
@@ -56,7 +58,6 @@ class WebMvpActivity : BActivity<BPresenter>(), BaseView {
                 LogUtils.d(permissionsDeniedForever, permissionsDenied)
             }
         }).request()
-        mPresenter?.other("测试", "Test", "I")
     }
 
     override fun initData() {

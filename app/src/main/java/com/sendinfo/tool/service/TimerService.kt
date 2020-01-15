@@ -5,8 +5,8 @@ import android.app.Service
 import android.content.Intent
 import android.os.Handler
 import android.os.IBinder
-import com.base.library.database.DataBaseUtils
-import com.base.library.database.entity.JournalRecord
+import com.base.library.db.LogDBManager
+import com.base.library.db.LogMessage
 import com.base.library.http.HttpDto
 import com.base.library.util.JsonTool
 import com.base.library.util.tryCatch
@@ -15,16 +15,14 @@ import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.TimeUtils
 import com.lzy.okgo.callback.StringCallback
 import com.lzy.okgo.model.Response
-import com.sendinfo.tool.entitys.request.base.BodyRequest
 import com.sendinfo.tool.entitys.request.base.FormRequest
 import com.sendinfo.tool.entitys.request.UploadLog
+import com.sendinfo.tool.entitys.request.base.BodyRequest
 import com.sendinfo.tool.entitys.response.BaseResponse
 import com.sendinfo.tool.tools.Beat
 import com.sendinfo.tool.tools.getShebeiCode
 import com.sendinfo.tool.tools.logSave
 import kotlinx.coroutines.*
-
-import java.util.ArrayList
 
 /**
  * 后台定时服务：日志30分钟上传和清理一次、心跳60秒一次
@@ -46,7 +44,7 @@ class TimerService : Service() {
             uploadLog()
             cleanLog()
             handlerLog?.let { handleLogs() }
-        }, 30 * 60 * 1000)
+        }, 5 * 1000)
     }
 
     override fun onBind(intent: Intent): IBinder? {
@@ -69,9 +67,7 @@ class TimerService : Service() {
     private fun cleanLog() {
         tryCatch({
             presenterScope.launch {
-                val timeStr = TimeUtils.getString(TimeUtils.getNowString(), -3, TimeConstants.DAY)
-                val i = DataBaseUtils.getJournalRecordDao().deleteFormTimeCts(timeStr)
-                LogUtils.d("删除了多少条:$i")
+                LogDBManager.deleteDays(-3)
             }
         })
     }
@@ -81,13 +77,14 @@ class TimerService : Service() {
      */
     @SuppressLint("CheckResult")
     private fun uploadLog() {
-        val startTime = TimeUtils.getString(TimeUtils.getNowString(), -5, TimeConstants.MIN)
+        val startTime = TimeUtils.string2Millis(TimeUtils.getString(TimeUtils.getNowString(), -60, TimeConstants.MIN))
+        val endTime = TimeUtils.string2Millis(TimeUtils.getNowString())
         presenterScope.launch {
-            val logDB = DataBaseUtils.getJournalRecordDao().queryFormTimeCts(startTime, TimeUtils.getNowString())
+            val logDB = LogDBManager.queryDate(startTime, endTime)
             val uploadLogs = ArrayList<UploadLog>()
             for (logMessage in logDB) {
                 val log = UploadLog().apply {
-                    logTime = logMessage.time
+                    logTime = TimeUtils.millis2String(logMessage.time)
                     logContent = logMessage.content
                     operatorCode = getShebeiCode()
                     getLogLevel(logMessage)
@@ -110,7 +107,7 @@ class TimerService : Service() {
         }
     }
 
-    private fun UploadLog.getLogLevel(logMessage: JournalRecord) {
+    private fun UploadLog.getLogLevel(logMessage: LogMessage) {
         when (logMessage.level) {
             "e", "E" -> {
                 logLevel = 1
@@ -153,11 +150,7 @@ class TimerService : Service() {
                 override fun onError(response: Response<String>?) {
                     tryCatch({
                         presenterScope.launch {
-                            val journalRecord = JournalRecord()
-                            journalRecord.content = response?.body() ?: ""
-                            journalRecord.behavior = "异常-心跳"
-                            journalRecord.level = "E"
-                            DataBaseUtils.getJournalRecordDao().insertCts(journalRecord)
+                            LogDBManager.add(LogMessage(response?.body() ?: "", "异常-心跳", "E"))
                         }
                     })
                 }

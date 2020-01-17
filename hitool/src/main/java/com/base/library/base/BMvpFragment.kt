@@ -66,6 +66,7 @@ abstract class BMvpFragment<T : BPresenter> : Fragment(), BView {
     override fun showDialog(loading: String?) {
         if (sweetAlertDialog != null && sweetAlertDialog!!.isShowing) {
             sweetAlertDialog?.setTitleText("正在加载数据")
+            sweetAlertDialog?.showContentText(false)
             sweetAlertDialog?.changeAlertType(BSweetAlertDialog.PROGRESS_TYPE)
         } else {
             if (getSweetAlertDialog() != null) {
@@ -75,6 +76,7 @@ abstract class BMvpFragment<T : BPresenter> : Fragment(), BView {
             }
             sweetAlertDialog?.changeAlertType(BSweetAlertDialog.PROGRESS_TYPE)
             sweetAlertDialog?.setTitleText("正在加载数据")
+            sweetAlertDialog?.showContentText(false)
             sweetAlertDialog?.show()
         }
     }

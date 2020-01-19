@@ -53,7 +53,7 @@ abstract class BMvpActivity<T : BPresenter> : AppCompatActivity(), BView {
 
     override fun showDialog(loading: String?) {
         if (sweetAlertDialog != null && sweetAlertDialog!!.isShowing) {
-            sweetAlertDialog?.setTitleText("正在加载数据")
+            sweetAlertDialog?.setTitleText(loading)
             sweetAlertDialog?.showContentText(false)
             sweetAlertDialog?.changeAlertType(BSweetAlertDialog.PROGRESS_TYPE)
         } else {
@@ -63,7 +63,7 @@ abstract class BMvpActivity<T : BPresenter> : AppCompatActivity(), BView {
                 sweetAlertDialog = SweetAlertDialog(this, BSweetAlertDialog.PROGRESS_TYPE)
             }
             sweetAlertDialog?.changeAlertType(BSweetAlertDialog.PROGRESS_TYPE)
-            sweetAlertDialog?.setTitleText("正在加载数据")
+            sweetAlertDialog?.setTitleText(loading)
             sweetAlertDialog?.showContentText(false)
             sweetAlertDialog?.show()
         }

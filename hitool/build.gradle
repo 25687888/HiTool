@@ -11,8 +11,8 @@ android {
     defaultConfig {
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode = 144
-        versionName = "1.4.4"
+        versionCode = 145
+        versionName = "1.4.5"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true

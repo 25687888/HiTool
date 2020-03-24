@@ -79,7 +79,7 @@ class LogHelper(context: Context) : OrmLiteSqliteOpenHelper(context, tableName, 
                 synchronized(this) {
                     if (instance == null) {
                         val path = File(pathName)
-                        if (!path.exists()) path.mkdir()
+                        if (!path.exists()) path.mkdirs()
                         val db = SQLiteDatabase.openOrCreateDatabase(pathName + tableName, null)
                         instance = LogHelper(context.applicationContext)
                         instance?.onCreate(db)

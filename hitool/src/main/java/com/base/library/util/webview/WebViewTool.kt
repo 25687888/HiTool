@@ -9,7 +9,6 @@ import android.os.Build
 import android.text.TextUtils
 import android.view.View
 import android.webkit.*
-import android.widget.ProgressBar
 import androidx.annotation.RequiresApi
 import com.blankj.utilcode.util.LogUtils
 import java.util.regex.Pattern
@@ -20,7 +19,12 @@ import android.content.Context.MODE_PRIVATE
  */
 object WebViewTool {
     @SuppressLint("SetJavaScriptEnabled")
-    fun setWebData(content: String, mWebView: WebView, mProgressBar: WebProgress?) {
+    fun setWebData(
+        content: String,
+        mWebView: WebView,
+        mProgressBar: WebProgress?,
+        loadErrorBlock: () -> Unit = {}
+    ) {
         // 设置WebView的属性，此时可以去执行JavaScript脚本`
         mWebView.settings.javaScriptEnabled = true // 设置支持javascript脚本
         mWebView.settings.allowFileAccess = true // 允许访问文件
@@ -73,6 +77,20 @@ object WebViewTool {
 
             // 当webview里面能点击是 在当前页面上显示！
             mWebView.webViewClient = object : WebViewClient() {
+                override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
+                    super.onReceivedError(view, request, error)
+                    loadErrorBlock.invoke()
+                }
+
+                override fun onReceivedHttpError(
+                    view: WebView?,
+                    request: WebResourceRequest?,
+                    errorResponse: WebResourceResponse?
+                ) {
+                    super.onReceivedHttpError(view, request, errorResponse)
+                    loadErrorBlock.invoke()
+                }
+
                 override fun shouldOverrideUrlLoading(view: WebView, url: String?): Boolean {
                     LogUtils.i(url)
                     if (url == null) {

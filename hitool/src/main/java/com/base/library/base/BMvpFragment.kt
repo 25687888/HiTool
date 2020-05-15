@@ -17,35 +17,27 @@ import com.base.library.view.sweetdialog.SweetAlertDialog
  */
 abstract class BMvpFragment<T : BPresenter> : Fragment(), BView {
     abstract fun initArgs(bundle: Bundle?)
-    abstract fun initView(bundle: Bundle?)
+    abstract fun initView(rootView: View, bundle: Bundle?)
+    abstract fun getLayoutId(): Int
     abstract fun initData()
     abstract fun getSweetAlertDialog(): BSweetAlertDialog?
 
     var mPresenter: T? = null
     private var sweetAlertDialog: BSweetAlertDialog? = null
-    private var mView: View? = null
-    private var container: ViewGroup? = null
-    private var inflater: LayoutInflater? = null
-
     val mHandler: Handler by lazy { Handler() }
     val mApplication: BApplication by lazy { activity?.application as BApplication }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        this.inflater = inflater
-        this.container = container
+        val rootView = inflater.inflate(getLayoutId(), container, false)
         initArgs(arguments)
-        initView(savedInstanceState)
+        initView(rootView,savedInstanceState)
         mPresenter?.let { lifecycle.addObserver(it) }
-        return mView
+        return rootView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initData()
-    }
-
-    fun setContentView(layout: Int) {
-        mView = inflater?.inflate(layout, container, false)
     }
 
     override fun onDestroyView() {

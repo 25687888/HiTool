@@ -91,8 +91,10 @@ open class BPresenterImpl<T : BView>(view: T) : BRequestCallback {
 
     override fun other(content: String, behavior: String, level: String) {
         tryCatch({
-            presenterScope.launch {
-                LogDBManager.add(LogMessage(content, behavior, level))
+            if (LogDBManager.isWrite) {
+                presenterScope.launch {
+                    LogDBManager.add(LogMessage(content, behavior, level))
+                }
             }
         })
     }

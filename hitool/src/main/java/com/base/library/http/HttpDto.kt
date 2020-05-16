@@ -72,18 +72,32 @@ class HttpDto(val method: String) {
 
     fun print(): String {
         val sb = StringBuilder()
-        sb.appendln("请求地址 : $url")
-        sb.appendln("请求方法 : $method")
-        sb.appendln("扩展字段 :")
-        extendField?.let { sb.appendln(JsonTool.getJsonString(extendField)) }
-        sb.appendln("params参数为 : ")
-        params?.forEach { sb.appendln("${it.key} = ${it.value}") }
-        sb.appendln("请求头为 : ")
-        heads?.forEach { sb.appendln("${it.key} = ${it.value}") }
-        sb.appendln("bodyJson参数为 : ")
-        if (!TextUtils.isEmpty(bodyJson)) sb.appendln(bodyJson)
-        sb.appendln("bodyStr参数为 : ")
-        if (!TextUtils.isEmpty(bodyString)) sb.appendln(bodyString)
+        if (!TextUtils.isEmpty(fullUrl)) {
+            sb.appendln("请求地址 : $fullUrl")
+        } else {
+            sb.appendln("请求地址 : $url")
+            sb.appendln("请求方法 : $method")
+        }
+        if (extendField != null) {
+            sb.appendln("扩展字段 :")
+            extendField?.let { sb.appendln(JsonTool.getJsonString(extendField)) }
+        }
+        if (params != null && params!!.isNotEmpty()) {
+            sb.appendln("params参数为 : ")
+            params?.forEach { sb.appendln("${it.key} = ${it.value}") }
+        }
+        if (heads != null && heads!!.isNotEmpty()) {
+            sb.appendln("请求头为 : ")
+            heads?.forEach { sb.appendln("${it.key} = ${it.value}") }
+        }
+        if (!TextUtils.isEmpty(bodyJson)) {
+            sb.appendln("bodyJson参数为 : ")
+            sb.appendln(bodyJson)
+        }
+        if (!TextUtils.isEmpty(bodyString)) {
+            sb.appendln("bodyStr参数为 : ")
+            sb.appendln(bodyString)
+        }
         LogUtils.i(sb.toString())
         return sb.toString()
     }

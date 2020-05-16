@@ -9,7 +9,7 @@ import android.content.Context
 object LogDBManager {
     private var helper: LogHelper? = null
     private var logMessageDao: LogMessageDao? = null
-
+    public var isWrite = true
     fun init(context: Context) {
         helper = LogHelper.getHelper(context)
         logMessageDao = LogMessageDao(context)
@@ -43,7 +43,12 @@ object LogDBManager {
         }
     }
 
-    fun queryDate(startDateTime: Long, endDateTime: Long, offset: Long, limit: Long): List<LogMessage> {
+    fun queryDate(
+        startDateTime: Long,
+        endDateTime: Long,
+        offset: Long,
+        limit: Long
+    ): List<LogMessage> {
         if (logMessageDao != null) {
             return LogMessageDao.queryDate(startDateTime, endDateTime, offset, limit)
         } else {
@@ -59,7 +64,12 @@ object LogDBManager {
         }
     }
 
-    fun queryDateOffseColumns(starttime: Long, columns: List<String>, offset: Long, limit: Long): List<LogMessage> {
+    fun queryDateOffseColumns(
+        starttime: Long,
+        columns: List<String>,
+        offset: Long,
+        limit: Long
+    ): List<LogMessage> {
         if (logMessageDao != null) {
             return LogMessageDao.queryDateOffseColumns(starttime, columns, offset, limit)
         } else {

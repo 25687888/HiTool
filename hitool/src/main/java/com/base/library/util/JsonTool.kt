@@ -31,35 +31,34 @@ object JsonTool {
     private val gson: Gson
 
     init {
-//        val gb = GsonBuilder()
-//        gb.setLongSerializationPolicy(LongSerializationPolicy.STRING)
-//        gb.registerTypeAdapter(Double::class.java, JsonSerializer<Double> { originalValue, _, _ ->
-//            val bigValue = BigDecimal.valueOf(originalValue)
-//            if (originalValue == bigValue.toDouble()) {
-//                JsonPrimitive(bigValue.toInt())
-//            } else {
-//                JsonPrimitive(originalValue)
-//            }
-//        })
-//        gb.registerTypeAdapter(Long::class.java, JsonSerializer<Long> { originalValue, _, _ ->
-//            val bigValue = BigDecimal.valueOf(originalValue)
-//            JsonPrimitive(bigValue.toPlainString())
-//        })
-//        gb.registerTypeAdapter(Int::class.java, JsonSerializer<Int> { originalValue, _, _ ->
-//            val bigValue = BigDecimal.valueOf(originalValue.toLong())
-//            JsonPrimitive(bigValue.toPlainString())
-//        })
-//        gb.registerTypeAdapter(
-//            object : TypeToken<TreeMap<String, Any>>() {}.type,
-//            JsonDeserializer { json, _, _ ->
-//                val treeMap = TreeMap<String, Any>()
-//                val jsonObject = json.asJsonObject
-//                val entrySet = jsonObject.entrySet()
-//                for ((key, value) in entrySet) treeMap[key] = value
-//                treeMap
-//            })
-//        gson = gb.create()
-        gson = Gson()
+        val gb = GsonBuilder()
+        gb.setLongSerializationPolicy(LongSerializationPolicy.STRING)
+        gb.registerTypeAdapter(Double::class.java, JsonSerializer<Double> { originalValue, _, _ ->
+            val bigValue = BigDecimal.valueOf(originalValue)
+            if (originalValue == bigValue.toDouble()) {
+                JsonPrimitive(bigValue.toInt())
+            } else {
+                JsonPrimitive(originalValue)
+            }
+        })
+        gb.registerTypeAdapter(Long::class.java, JsonSerializer<Long> { originalValue, _, _ ->
+            val bigValue = BigDecimal.valueOf(originalValue)
+            JsonPrimitive(bigValue.toPlainString())
+        })
+        gb.registerTypeAdapter(Int::class.java, JsonSerializer<Int> { originalValue, _, _ ->
+            val bigValue = BigDecimal.valueOf(originalValue.toLong())
+            JsonPrimitive(bigValue.toPlainString())
+        })
+        gb.registerTypeAdapter(
+            object : TypeToken<TreeMap<String, Any>>() {}.type,
+            JsonDeserializer { json, _, _ ->
+                val treeMap = TreeMap<String, Any>()
+                val jsonObject = json.asJsonObject
+                val entrySet = jsonObject.entrySet()
+                for ((key, value) in entrySet) treeMap[key] = value
+                treeMap
+            })
+        gson = gb.create()
     }
 
     /**

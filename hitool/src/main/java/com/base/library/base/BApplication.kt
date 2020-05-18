@@ -29,7 +29,7 @@ open class BApplication : MultiDexApplication() {
         super.onCreate()
         val startTime = System.currentTimeMillis()//获取开始时间
         isDebug = applicationInfo != null && applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
-        LogDBManager.init(this)//日志数据库初始化
+        if (LogDBManager.isWrite)LogDBManager.init(this)//日志数据库初始化
         initAndroidUtilCode()
         initHttp()
         if (!isDebug) initCockroach()

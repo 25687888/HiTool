@@ -12,6 +12,7 @@ import okhttp3.OkHttpClient
 import android.content.pm.ApplicationInfo
 import com.base.library.db.LogDBManager
 import com.base.library.db.LogMessage
+import com.base.library.util.LogInterceptor
 import com.base.library.util.tryCatch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -28,8 +29,9 @@ open class BApplication : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
         val startTime = System.currentTimeMillis()//获取开始时间
-        isDebug = applicationInfo != null && applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
-        if (LogDBManager.isWrite)LogDBManager.init(this)//日志数据库初始化
+        isDebug =
+            applicationInfo != null && applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
+        if (LogDBManager.isWrite) LogDBManager.init(this)//日志数据库初始化
         initAndroidUtilCode()
         initHttp()
         if (!isDebug) initCockroach()
@@ -61,11 +63,13 @@ open class BApplication : MultiDexApplication() {
 //        val loggingInterceptor = HttpLoggingInterceptor("OkGo")
 //        loggingInterceptor.setPrintLevel(HttpLoggingInterceptor.Level.BODY)
 //        loggingInterceptor.setColorLevel(Level.INFO)
-
         //信任所有证书,不安全有风险
         val sslParams1 = HttpsUtils.getSslSocketFactory()
         val builder = OkHttpClient.Builder()
-//        builder.addInterceptor(loggingInterceptor)//打印日志
+        if (LogInterceptor.isOutLogInterceptor) {
+            val loggingInterceptor = LogInterceptor()
+            builder.addInterceptor(loggingInterceptor)//打印日志
+        }
         builder.sslSocketFactory(sslParams1.sSLSocketFactory, sslParams1.trustManager)
 
         //重连次数,默认三次,最差的情况4次(一次原始请求,三次重连请求),不需要可以设置为0

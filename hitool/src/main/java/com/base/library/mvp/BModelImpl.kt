@@ -1,19 +1,24 @@
 package com.base.library.mvp
 
 import com.base.library.http.HttpDto
+import com.base.library.util.LogInterceptor
 import com.blankj.utilcode.util.LogUtils
 import com.lzy.okgo.model.Response
 
 class BModelImpl : BModel {
 
     override fun getData(callback: BRequestCallback, http: HttpDto) {
-        val requestBody = http.print()
-        callback.other(requestBody, "请求参数 ${http.method}", "I")
+        if (LogInterceptor.isOutLogHttpDao) {
+            val requestBody = http.print()
+            callback.other(requestBody, "请求参数 ${http.method}", "I")
+        }
         http.getOkGo().execute(object : BCallback(callback, http.silence) {
             override fun onSuccess(response: Response<String>?) {
                 super.onSuccess(response)
                 val body = response?.body() ?: ""
-                printLog(http.url, http.method, body)
+                if (LogInterceptor.isOutLogHttpDao) {
+                    printLog(http.url, http.method, body)
+                }
                 callback.other(body, "请求成功 ${http.method}", "I")
                 callback.requestSuccess(body, http)
             }

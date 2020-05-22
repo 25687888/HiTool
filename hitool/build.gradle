@@ -11,8 +11,8 @@ android {
     defaultConfig {
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode = 157
-        versionName = "1.5.7"
+        versionCode = 158
+        versionName = "1.5.8"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
@@ -67,7 +67,7 @@ dependencies {
     api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
 
     //网络基础框架okhttp
-    api 'com.squareup.okhttp3:okhttp:3.12.1'
+    api 'com.squareup.okhttp3:okhttp:3.11.0'
     api 'com.squareup.okio:okio:2.2.2'
     //网络框架okgo
     api 'com.lzy.net:okgo:3.0.4' // 网络请求

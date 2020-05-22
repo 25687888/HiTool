@@ -3,7 +3,7 @@ package com.base.library.http
 import android.text.TextUtils
 import com.base.library.util.JsonTool
 import com.base.library.util.SpTool
-import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.TimeUtils
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.cache.CacheMode
 import com.lzy.okgo.convert.StringConvert
@@ -70,8 +70,8 @@ class HttpDto(val method: String) {
         return request
     }
 
-    fun print(): String {
-        val sb = StringBuilder()
+    fun getReqMessage(): String {
+        val sb = StringBuilder(TimeUtils.getNowString())
         if (!TextUtils.isEmpty(fullUrl)) {
             sb.appendln("请求地址 : $fullUrl")
         } else {
@@ -91,14 +91,13 @@ class HttpDto(val method: String) {
             heads?.forEach { sb.appendln("${it.key} = ${it.value}") }
         }
         if (!TextUtils.isEmpty(bodyJson)) {
-            sb.appendln("bodyJson参数为 : ")
+            sb.appendln("请求bodyJson为 : ")
             sb.appendln(bodyJson)
         }
         if (!TextUtils.isEmpty(bodyString)) {
-            sb.appendln("bodyStr参数为 : ")
+            sb.appendln("请求bodyStr为 : ")
             sb.appendln(bodyString)
         }
-        LogUtils.i(sb.toString())
         return sb.toString()
     }
 

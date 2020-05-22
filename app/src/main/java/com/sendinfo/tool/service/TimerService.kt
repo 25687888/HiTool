@@ -77,7 +77,13 @@ class TimerService : Service() {
      */
     @SuppressLint("CheckResult")
     private fun uploadLog() {
-        val startTime = TimeUtils.string2Millis(TimeUtils.getString(TimeUtils.getNowString(), -60, TimeConstants.MIN))
+        val startTime = TimeUtils.string2Millis(
+            TimeUtils.getString(
+                TimeUtils.getNowString(),
+                -60,
+                TimeConstants.MIN
+            )
+        )
         val endTime = TimeUtils.string2Millis(TimeUtils.getNowString())
         presenterScope.launch {
             val logDB = LogDBManager.queryDate(startTime, endTime)
@@ -92,8 +98,10 @@ class TimerService : Service() {
                 uploadLogs.add(log)
             }
             if (uploadLogs.isNotEmpty()) {
-                val requestBody = BodyRequest().apply { dataInfo = JsonTool.getJsonString(uploadLogs) }
-                val httpDto = HttpDto(logSave).apply { bodyJson = JsonTool.getJsonString(requestBody) }
+                val requestBody =
+                    BodyRequest().apply { dataInfo = JsonTool.getJsonString(uploadLogs) }
+                val httpDto =
+                    HttpDto(logSave).apply { bodyJson = JsonTool.getJsonString(requestBody) }
                 httpDto.getOkGo().execute(object : StringCallback() {
                     override fun onSuccess(response: Response<String>?) {
                         LogUtils.i("上传日志成功,${response?.code()}")
@@ -140,7 +148,7 @@ class TimerService : Service() {
                 httpType = HttpDto.GET
                 params = JsonTool.getMapFromObj(form)
             }
-            httpDto.print()
+            LogUtils.i(httpDto.getReqMessage())
             httpDto.getOkGo().execute(object : StringCallback() {
                 override fun onSuccess(response: Response<String>?) {
                     val body = response?.body() ?: ""
@@ -156,6 +164,6 @@ class TimerService : Service() {
                 }
             })
             handlerBeat?.let { handlerBeat() }
-        }, 60 * 1000)
+        }, 1 * 1000)
     }
 }

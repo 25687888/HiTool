@@ -7,7 +7,7 @@ import com.sendinfo.tool.tools.putIp
 import com.tencent.bugly.Bugly
 import com.tencent.bugly.beta.Beta
 import com.tencent.bugly.crashreport.CrashReport.UserStrategy
-import android.widget.Toast
+import com.base.library.db.LogDBManager
 import com.blankj.utilcode.util.LogUtils
 import com.tencent.bugly.beta.interfaces.BetaPatchListener
 import java.util.*
@@ -15,6 +15,7 @@ import java.util.*
 
 class Application : BApplication() {
     override fun onCreate() {
+        LogDBManager.isWrite = false//是否记录本地日志
         super.onCreate()
         putIp("http://192.168.66.205:9090")//设置默认服务器地址
         initTinker(applicationContext)//初始化Bugly热更新、版本升级、Crash统计

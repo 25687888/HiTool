@@ -64,16 +64,15 @@ open class BApplication : MultiDexApplication() {
 //        loggingInterceptor.setPrintLevel(HttpLoggingInterceptor.Level.BODY)
 //        loggingInterceptor.setColorLevel(Level.INFO)
         //信任所有证书,不安全有风险
+        val okGo = OkGo.getInstance().init(this)
         val sslParams1 = HttpsUtils.getSslSocketFactory()
-        val builder = OkHttpClient.Builder()
+        val builder = okGo.okHttpClient.newBuilder()
         if (LogInterceptor.isOutLogInterceptor) {
             val loggingInterceptor = LogInterceptor()
             builder.addInterceptor(loggingInterceptor)//打印日志
         }
         builder.sslSocketFactory(sslParams1.sSLSocketFactory, sslParams1.trustManager)
-
-        //重连次数,默认三次,最差的情况4次(一次原始请求,三次重连请求),不需要可以设置为0
-        OkGo.getInstance().init(this).setOkHttpClient(builder.build()).retryCount = 0
+        okGo.retryCount = 0//重连次数,默认三次,最差的情况4次(一次原始请求,三次重连请求),不需要可以设置为0
     }
 
     /**

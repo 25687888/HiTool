@@ -11,8 +11,8 @@ android {
     defaultConfig {
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode = 160
-        versionName = "1.6.0"
+        versionCode = 161
+        versionName = "1.6.1"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
@@ -90,7 +90,7 @@ dependencies {
     kapt 'com.github.bumptech.glide:compiler:4.10.0'
     api 'com.github.bumptech.glide:okhttp3-integration:4.10.0'
 
-    api 'com.blankj:utilcode:1.25.9'//柯基 AndroidUtilCode
+    api 'com.blankj:utilcode:1.29.0'//柯基 AndroidUtilCode
     // json相关
     api 'com.google.code.gson:gson:2.8.5'
     // 动画

@@ -6,7 +6,7 @@ import com.amap.api.location.AMapLocation
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.base.library.interfaces.MyLifecycleObserver
-import com.blankj.utilcode.util.Utils
+import com.blankj.utilcode.util.ThreadUtils
 
 /**
  * 高德地图签到模式定位，封装
@@ -52,6 +52,6 @@ class LocationTool(var mContext: Context) : MyLifecycleObserver {
 
     fun getLocation(listenerLocation: (AMapLocation) -> Unit) {
         this.listenerLocation = listenerLocation
-        Utils.runOnUiThreadDelayed({ locationClient?.startLocation() }, 100)
+        ThreadUtils.runOnUiThreadDelayed({ locationClient?.startLocation() }, 100)
     }
 }

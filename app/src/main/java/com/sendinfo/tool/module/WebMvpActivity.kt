@@ -10,25 +10,26 @@ import com.base.library.mvp.BasePresenter
 import com.base.library.mvp.BaseView
 import com.base.library.util.setThreeClick
 import com.base.library.util.webview.WebViewTool
+import com.blankj.utilcode.constant.PermissionConstants
+import com.blankj.utilcode.util.*
+import com.blankj.utilcode.util.PermissionUtils.FullCallback
+import com.sendinfo.tool.R
 import com.sendinfo.tool.base.BActivity
+import com.sendinfo.tool.tools.*
+import com.sendinfo.tool.views.dialogs.InputDialog
 import kotlinx.android.synthetic.main.activity_web.*
 import kotlinx.android.synthetic.main.b_titlebar.*
-import com.blankj.utilcode.constant.PermissionConstants
-import com.blankj.utilcode.util.LogUtils
-import com.blankj.utilcode.util.NetworkUtils
-import com.blankj.utilcode.util.PermissionUtils
-import com.sendinfo.tool.R
-import com.sendinfo.tool.tools.getWebUrl
-import com.sendinfo.tool.tools.putWebUrl
-import com.sendinfo.tool.views.dialogs.InputDialog
-import com.blankj.utilcode.util.PermissionUtils.FullCallback
-import com.sendinfo.tool.service.TimerService
-import com.sendinfo.tool.tools.JsBridge
-import com.sendinfo.tool.tools.LocationTool
 
 class WebMvpActivity : BActivity<BPresenter>(), BaseView {
     private var jsBridge = JsBridge()
-    private val locationTool: LocationTool by lazy { LocationTool(getContext()).apply { lifecycle.addObserver(this) } }
+    private val locationTool: LocationTool by lazy {
+        LocationTool(getContext()).apply {
+            lifecycle.addObserver(
+                this
+            )
+        }
+    }
+    private var jobReceiverTool = JobReceiverTool()
 
     override fun bindPresenter(): BPresenter = BasePresenter(this)
 
@@ -54,7 +55,10 @@ class WebMvpActivity : BActivity<BPresenter>(), BaseView {
                 }
             }
 
-            override fun onDenied(permissionsDeniedForever: List<String>, permissionsDenied: List<String>) {
+            override fun onDenied(
+                permissionsDeniedForever: List<String>,
+                permissionsDenied: List<String>
+            ) {
                 LogUtils.d(permissionsDeniedForever, permissionsDenied)
             }
         }).request()
@@ -67,6 +71,12 @@ class WebMvpActivity : BActivity<BPresenter>(), BaseView {
         webView.addJavascriptInterface(jsBridge, "jsBridge")//js映射
         webProgress.setColor(ContextCompat.getColor(this, R.color.colorAccent))
         WebViewTool.setWebData(getWebUrl(), webView, webProgress)
+        jobReceiverTool.register(this, "timerTask")
+        val jobBean = JobReceiverTool.JobBean("timerTask", 1000, 5000, 100,Runnable {
+            LogUtils.i("timerTask getNowTime " + TimeUtils.getNowString())
+            ToastUtils.showShort("NowTime "+TimeUtils.getNowString())
+        })
+        jobReceiverTool.doJob(jobBean)
     }
 
     override fun bindData(bodyStr: String) {
@@ -90,6 +100,7 @@ class WebMvpActivity : BActivity<BPresenter>(), BaseView {
     override fun onDestroy() {
         super.onDestroy()
         inputDialog?.dismiss()
+        jobReceiverTool.unregister(this)
     }
 
     private var netIsOK = false

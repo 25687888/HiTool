@@ -79,6 +79,7 @@ open class BApplication : MultiDexApplication() {
 
         //---------这里给出的是示例代码,告诉你可以这么传,实际使用的时候,根据需要传,不需要就不传-------------//
         val headers = HttpHeaders()
+        headers.put("Connection","close")
         //		headers.put("commonHeaderKey1", "commonHeaderValue1");    //header不支持中文，不允许有特殊字符
         //		headers.put("commonHeaderKey2", "commonHeaderValue2");
         val params = HttpParams()

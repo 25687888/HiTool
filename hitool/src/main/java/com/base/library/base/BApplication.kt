@@ -81,6 +81,7 @@ open class BApplication : MultiDexApplication() {
         val headers = HttpHeaders()
         //		headers.put("commonHeaderKey1", "commonHeaderValue1");    //header不支持中文，不允许有特殊字符
         //		headers.put("commonHeaderKey2", "commonHeaderValue2");
+        headers.put("Connection", "close");
         val params = HttpParams()
         //		params.put("commonParamsKey1", "commonParamsValue1");     //param支持中文,直接传,不要自己编码
         //		params.put("commonParamsKey2", "这里支持中文参数");
